@@ -183,11 +183,11 @@ def generate(
     prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
 ) -> Image:
     id = None
-    if lora.lora_enabled and lora.vprod:
+    if lora.lora_enabled and lora.vpred:
         id = t2i_request_vpred_lora(prompt, negative, lora, image_size)
-    elif not lora.lora_enabled and lora.vprod:
+    elif not lora.lora_enabled and lora.vpred:
         id = t2i_request_vpred(prompt, negative, lora, image_size)
-    elif lora.lora_enabled and not lora.vprod:
+    elif lora.lora_enabled and not lora.vpred:
         id = t2i_request_lora(prompt, negative, lora, image_size)
     else:
         id = t2i_request(prompt, negative, lora, image_size)
