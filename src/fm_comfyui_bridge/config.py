@@ -13,6 +13,7 @@ COMFYUI_NODE_PROMPT = "3"
 COMFYUI_NODE_NEGATIVE = "4"
 # ComfyUI seed node
 COMFYUI_NODE_SEED = "7"
+COMFYUI_NODE_VPRED_SEED = "17"
 # ComfyUI output node
 COMFYUI_NODE_OUTPUT = "12"
 # ComfyUI latent size node

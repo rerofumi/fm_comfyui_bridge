@@ -1,4 +1,5 @@
 checkpoint: noobaicyberfix_v20.safetensors
+vpred: false
 image-size:
   height: 1344
   width: 768

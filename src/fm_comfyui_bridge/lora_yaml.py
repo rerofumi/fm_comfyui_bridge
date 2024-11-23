@@ -64,3 +64,12 @@ class SdLoraYaml:
                 self.data["image-size"]["height"],
             )
         return image_size
+
+    @property
+    def vprod(self) -> bool:
+        """Vprod mode flag"""
+        if "vprod" in self.data:  # Check if 'vprod' key exists in the data dictionary
+            return self.data["vprod"]
+        else:
+            self.data["vprod"] = False  # Set default value to False if not present
+            return False
