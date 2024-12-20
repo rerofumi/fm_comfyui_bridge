@@ -134,7 +134,7 @@ def t2i_request_vpred_lora(
 def get_image(id: any, server_url: str = None, output_node: str = None):
     url = server_url if server_url else config.COMFYUI_URL
     if not output_node:
-        output_node = config.COMFYUI_NODE_OUTPUT_IMAGE
+        output_node = config.COMFYUI_NODE_OUTPUT
     # リクエストヒストリからファイル名を取得
     headers = {"Content-Type": "application/json"}
     response = requests.get(f"{url}history/{id}", headers=headers)
