@@ -131,21 +131,19 @@ def t2i_request_vpred_lora(
     return request_id
 
 
-def get_image(id: any, server_url: str = None):
-    # リクエストヒストリからファイル名を取得
+def get_image(id: any, server_url: str = None, output_node: str = None):
     url = server_url if server_url else config.COMFYUI_URL
+    if not output_node:
+        output_node = config.COMFYUI_NODE_OUTPUT_IMAGE
+    # リクエストヒストリからファイル名を取得
     headers = {"Content-Type": "application/json"}
     response = requests.get(f"{url}history/{id}", headers=headers)
     if response.status_code != 200:
         print(f"Error: {response.status_code}")
         print(response.text)
         return None
-    subdir = response.json()[id]["outputs"][config.COMFYUI_NODE_OUTPUT]["images"][0][
-        "subfolder"
-    ]
-    filename = response.json()[id]["outputs"][config.COMFYUI_NODE_OUTPUT]["images"][0][
-        "filename"
-    ]
+    subdir = response.json()[id]["outputs"][output_node]["images"][0]["subfolder"]
+    filename = response.json()[id]["outputs"][output_node]["images"][0]["filename"]
     headers = {"Content-Type": "application/json"}
     params = {"subfolder": subdir, "filename": filename}
     response = requests.get(f"{url}view", headers=headers, params=params)
