@@ -1,8 +1,9 @@
 # fm_comfyui_bridge README
 
-このプロジェクトは、ComfyUI API 経由で画像生成を依頼するためのブリッジを提供します。
 
-自作の小物ツールで使う共通部分を切り出したものとなります。
+このプロジェクトは、[ComfyUI](https://github.com/comfyanonymous/ComfyUI) のAPIを通じて画像生成をプログラムから制御するためのPythonライブラリです。
+
+主に、個人的なツール開発で ComfyUI の画像生成機能を再利用するために、共通処理を切り出したものになります。
 
 ## インストール
 
@@ -21,6 +22,20 @@ uv build
 
 positive_prompt(text), negative_prompt(text), 出力モデル等の設定(SdLoraYaml) の 3つを渡すことで画像生成できることを目指しています。
 テキストプロンプトや設定を、python コードで変更しながらバッチ出力するような小物ツールを作成できます。
+
+
+### ComfyUI の準備
+
+ローカル環境に ComfyUI のインストール、セットアップを行い動作している事を確認してください。
+
+カスタムノードを使用しています。workflow ディレクトリにある `_api` が『付いていない』ワークフローを ComfyUI に読みこませて、全ノード問題なく動作することを確認してください。
+
+以下のカスタムノードを使っています(できるだけ挙げましたが抜け漏れがあるかもしれません)
+
+- ComfyUI_Comfyroll_CustomNodes
+- ComfyUI-Crystools
+- ComfyUI_smZNodes
+- comfyui-prompt-reader-node
 
 
 ### API ドキュメント
