@@ -1,6 +1,6 @@
 import os
 
-from fm_comfyui_bridge.bridge import generate, save_image
+from fm_comfyui_bridge.bridge import generate, save_image, send_image
 from fm_comfyui_bridge.comfy_api import NEGATIVE
 from fm_comfyui_bridge.lora_yaml import SdLoraYaml
 
@@ -11,6 +11,7 @@ def test_bridge_functionality():
     img = generate("1girl", NEGATIVE, lora, (1024, 1024))
     path = save_image(img, posi="1girl", nega=NEGATIVE, workspace="./tests")
     assert os.path.exists(path), f"ファイルが存在しません: {path}"
+    send_image(path, upload_name="bridge_test.png")
     if os.path.exists(path):
         os.remove(path)  # yaml書き込み後、ファイル削除
         os.rmdir("./tests/outputs")

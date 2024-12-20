@@ -181,6 +181,22 @@ def save_image(
     return image_path
 
 
+def send_image(filename, upload_name=None, server_url: str = None):
+    url = server_url if server_url else config.COMFYUI_URL
+    if upload_name is None:
+        upload_name = os.path.basename(filename)
+    picture = Image.open(filename).convert("RGBA")
+    picture_data = io.BytesIO()
+    picture.save(picture_data, format="PNG")
+    picture_data.seek(0)
+    files = {
+        "image": (upload_name, picture_data, "image/png"),
+        "overwrite": True,
+    }
+    response = requests.post(f"{url}upload/image", files=files)
+    return response
+
+
 #
 # convenience methods
 #
