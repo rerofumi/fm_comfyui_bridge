@@ -12,12 +12,13 @@ import fm_comfyui_bridge.config as config
 from fm_comfyui_bridge.lora_yaml import SdLoraYaml
 
 
-def send_request(prompt: str) -> str | None:
+def send_request(prompt: str, server_url: str = None) -> str | None:
     # APIにリクエスト送信
     headers = {"Content-Type": "application/json"}
     data = {"prompt": prompt}
+    url = server_url if server_url else config.COMFYUI_URL
     response = requests.post(
-        f"{config.COMFYUI_URL}prompt",
+        f"{url}prompt",
         headers=headers,
         data=json.dumps(data).encode("utf-8"),
     )
@@ -28,19 +29,19 @@ def send_request(prompt: str) -> str | None:
     return response.json()["prompt_id"]
 
 
-def await_request(check_interval: float, retry_interval: float):
+def await_request(check_interval: float, retry_interval: float, server_url: str = None):
     # 一定時間ごとにリクエストの状態を確認
+    url = server_url if server_url else config.COMFYUI_URL
     while True:
         time.sleep(check_interval)
         headers = {"Content-Type": "application/json"}
-        response = requests.get(f"{config.COMFYUI_URL}queue", headers=headers)
+        response = requests.get(f"{url}queue", headers=headers)
         if response.status_code != 200:
             print(f"Error: {response.status_code}")
             print(response.text)
             time.sleep(retry_interval)
             continue
         json_data = response.json()
-        # json の queue_running, queue_pending が存在し、 list 長が両方 0 の場合は break
         if (
             len(json_data.get("queue_running", [])) == 0
             and len(json_data.get("queue_pending", [])) == 0
@@ -130,10 +131,11 @@ def t2i_request_vpred_lora(
     return request_id
 
 
-def get_image(id: any):
+def get_image(id: any, server_url: str = None):
     # リクエストヒストリからファイル名を取得
+    url = server_url if server_url else config.COMFYUI_URL
     headers = {"Content-Type": "application/json"}
-    response = requests.get(f"{config.COMFYUI_URL}history/{id}", headers=headers)
+    response = requests.get(f"{url}history/{id}", headers=headers)
     if response.status_code != 200:
         print(f"Error: {response.status_code}")
         print(response.text)
@@ -144,10 +146,9 @@ def get_image(id: any):
     filename = response.json()[id]["outputs"][config.COMFYUI_NODE_OUTPUT]["images"][0][
         "filename"
     ]
-    # API で画像ファイルを取得
     headers = {"Content-Type": "application/json"}
     params = {"subfolder": subdir, "filename": filename}
-    response = requests.get(f"{config.COMFYUI_URL}view", headers=headers, params=params)
+    response = requests.get(f"{url}view", headers=headers, params=params)
     if response.status_code != 200:
         print(f"Error: {response.status_code}")
         print(response.text)
@@ -155,11 +156,15 @@ def get_image(id: any):
     return Image.open(io.BytesIO(response.content))
 
 
-def save_image(image, posi=None, nega=None, filename=None, workspace=None):
+def save_image(
+    image, posi=None, nega=None, filename=None, workspace=None, output_dir=None
+):
     global workspace_dir
     if workspace is None:
         workspace = "./"
-    output_dir = os.path.join(workspace, config.OUTPUTS_DIR)
+    if output_dir is None:
+        output_dir = config.OUTPUTS_DIR
+    output_dir = os.path.join(workspace, output_dir)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
