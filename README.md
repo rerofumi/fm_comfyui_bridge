@@ -107,6 +107,11 @@ save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
 
 ## 変更履歴
 
+### バージョン 0.4.0
+
+- ComfyUI へ画像をアップロードする send_image() 関数を追加。I2I や mask 画像用
+
+
 ### バージョン 0.3.0
 
 - README.md を追加
