@@ -172,6 +172,48 @@ def t2i_request_build(
     return prompt_path
 
 
+def t2i_highreso_request_build(
+    workflow: str,
+    prompt: str,
+    negative: str,
+    lora: SdLoraYaml,
+    image_size: tuple[int, int],
+) -> any:
+    with importlib.resources.open_text(comfy_api.WORKFLOW, workflow) as f:
+        prompt_path = json.load(f)
+    # パラメータ埋め込み(workflowによって異なる処理)
+    prompt_path[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
+        lora.checkpoint
+    )
+    prompt_path[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
+    prompt_path[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
+    for node in config.COMFYUI_NODE_HR_SEED:
+        prompt_path[node]["inputs"]["noise_seed"] = random.randint(1, 10000000000)
+    prompt_path[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
+    prompt_path[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
+    for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
+        prompt_path[node]["inputs"]["lora_name"] = lora.model
+        prompt_path[node]["inputs"]["strength_model"] = lora.strength
+        prompt_path[node]["inputs"]["strength_clip"] = lora.strength
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    prompt_path[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
+        f"{current_date}/Bridge"
+    )
+    # lora, prediction
+    if not lora.lora_enabled:
+        for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
+            prompt_path[node]["inputs"]["strength_model"] = 0
+            prompt_path[node]["inputs"]["strength_clip"] = 0
+    if lora.vpred:
+        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
+            prompt_path[node]["inputs"]["sampling"] = "v_prediction"
+    else:
+        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
+            prompt_path[node]["inputs"]["sampling"] = "eps"
+
+    return prompt_path
+
+
 #
 # convenience methods
 #
@@ -184,5 +226,20 @@ def generate(
     )
     if id:
         await_request(1, 3)
-        return get_image(id)
+        return get_image(id, output_node=config.COMFYUI_NODE_OUTPUT)
+    return None
+
+
+def generate_highreso(
+    prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
+) -> Image:
+    id = None
+    id = send_request(
+        t2i_highreso_request_build(
+            comfy_api.HIGHRES_WORKFLOW, prompt, negative, lora, image_size
+        )
+    )
+    if id:
+        await_request(1, 3)
+        return get_image(id, output_node=config.COMFYUI_NODE_HR_OUTPUT)
     return None

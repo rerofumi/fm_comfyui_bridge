@@ -51,6 +51,15 @@ ComfyUI のタスクキューが空になるまで待ちますので、他のタ
 sample = api.generate(prompt="1girl", negative="low quality", lora=lora_yaml_instance, image_size=(1024, 1024))
 ```
 
+#### `generate_highreso(prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]) -> Image`
+
+マルチパスサンプリング＆アップスケールを使用します。時間はかかりますがちょっときれいな出力が得られます。
+詳細はワークフローファイル `MultiPassSampling.json` を参照してください。
+
+```
+sample = api.generate_highreso(prompt="1girl", negative="low quality", lora=lora_yaml_instance, image_size=(1024, 1024))
+```
+
 
 #### `save_image(image, posi=None, nega=None, filename=None, workspace=None, output_dir=None)`
 
@@ -110,6 +119,7 @@ save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
 ### バージョン 0.5.0
 
 - Workflow 刷新、lora 有り/無しと eps/vpred を 1つの workflow で表現
+- マルチパスハイレゾモード追加(1.5倍にアップスケール)
 
 ### バージョン 0.4.0
 
