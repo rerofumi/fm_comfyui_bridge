@@ -1,6 +1,6 @@
 [project]
 name = "fm-comfyui-bridge"
-version = "0.5.1"
+version = "0.5.2"
 description = "ComfyUI access bridge"
 readme = "README.md"
 authors = [
@@ -16,12 +16,6 @@ dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.hatch.build]
-packages = ["src/fm_comfyui_bridge"]
-include = [
-    "src/Workflow",
-]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
