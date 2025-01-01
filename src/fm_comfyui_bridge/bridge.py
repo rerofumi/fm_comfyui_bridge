@@ -1,5 +1,4 @@
 import datetime
-import importlib.resources
 import io
 import json
 import os
@@ -136,8 +135,7 @@ def t2i_request_build(
     lora: SdLoraYaml,
     image_size: tuple[int, int],
 ) -> any:
-    with importlib.resources.open_text(comfy_api.WORKFLOW, workflow) as f:
-        prompt_path = json.load(f)
+    prompt_path = json.loads(comfy_api.NORMAL_WORKFLOW)
     # パラメータ埋め込み(workflowによって異なる処理)
     prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
     prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
@@ -179,8 +177,7 @@ def t2i_highreso_request_build(
     lora: SdLoraYaml,
     image_size: tuple[int, int],
 ) -> any:
-    with importlib.resources.open_text(comfy_api.WORKFLOW, workflow) as f:
-        prompt_path = json.load(f)
+    prompt_path = json.loads(comfy_api.HIGHRES_WORKFLOW)
     # パラメータ埋め込み(workflowによって異なる処理)
     prompt_path[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
         lora.checkpoint
