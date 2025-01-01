@@ -1,3 +1,5 @@
+import datetime
+import importlib.resources
 import io
 import json
 import os
@@ -10,6 +12,10 @@ from PIL import Image, PngImagePlugin
 import fm_comfyui_bridge.comfy_api as comfy_api
 import fm_comfyui_bridge.config as config
 from fm_comfyui_bridge.lora_yaml import SdLoraYaml
+
+#
+# ComfyUI API request
+#
 
 
 def send_request(prompt: str, server_url: str = None) -> str | None:
@@ -49,88 +55,6 @@ def await_request(check_interval: float, retry_interval: float, server_url: str 
             break
 
 
-def t2i_request(
-    prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
-) -> any:
-    prompt_path = json.loads(comfy_api.API_NO_LORA)
-    # パラメータ埋め込み(workflowによって異なる処理)
-    prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
-    prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
-    prompt_path[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
-    prompt_path[config.COMFYUI_NODE_SEED]["inputs"]["seed"] = random.randint(
-        1, 10000000000
-    )
-    prompt_path[config.COMFYUI_NODE_SIZE_WIDTH]["inputs"]["int"] = image_size[0]
-    prompt_path[config.COMFYUI_NODE_SIZE_HEIGHT]["inputs"]["int"] = image_size[1]
-    request_id = send_request(prompt_path)
-    return request_id
-
-
-def t2i_request_lora(
-    prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
-) -> any:
-    prompt_path = json.loads(comfy_api.API_WITH_LORA)
-    # パラメータ埋め込み(workflowによって異なる処理)
-    prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["lora_name"] = lora.model
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_model"] = (
-        lora.strength
-    )
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_clip"] = (
-        lora.strength
-    )
-    prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
-    prompt_path[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
-    prompt_path[config.COMFYUI_NODE_SEED]["inputs"]["seed"] = random.randint(
-        1, 10000000000
-    )
-    prompt_path[config.COMFYUI_NODE_SIZE_WIDTH]["inputs"]["int"] = image_size[0]
-    prompt_path[config.COMFYUI_NODE_SIZE_HEIGHT]["inputs"]["int"] = image_size[1]
-    request_id = send_request(prompt_path)
-    return request_id
-
-
-def t2i_request_vpred(
-    prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
-) -> any:
-    prompt_path = json.loads(comfy_api.API_NO_LORA_VPRED)
-    # パラメータ埋め込み(workflowによって異なる処理)
-    prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
-    prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
-    prompt_path[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
-    prompt_path[config.COMFYUI_NODE_VPRED_SEED]["inputs"]["noise_seed"] = (
-        random.randint(1, 10000000000)
-    )
-    prompt_path[config.COMFYUI_NODE_SIZE_WIDTH]["inputs"]["int"] = image_size[0]
-    prompt_path[config.COMFYUI_NODE_SIZE_HEIGHT]["inputs"]["int"] = image_size[1]
-    request_id = send_request(prompt_path)
-    return request_id
-
-
-def t2i_request_vpred_lora(
-    prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
-) -> any:
-    prompt_path = json.loads(comfy_api.API_WITH_LORA_VPRED)
-    # パラメータ埋め込み(workflowによって異なる処理)
-    prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["lora_name"] = lora.model
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_model"] = (
-        lora.strength
-    )
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_clip"] = (
-        lora.strength
-    )
-    prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
-    prompt_path[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
-    prompt_path[config.COMFYUI_NODE_VPRED_SEED]["inputs"]["noise_seed"] = (
-        random.randint(1, 10000000000)
-    )
-    prompt_path[config.COMFYUI_NODE_SIZE_WIDTH]["inputs"]["int"] = image_size[0]
-    prompt_path[config.COMFYUI_NODE_SIZE_HEIGHT]["inputs"]["int"] = image_size[1]
-    request_id = send_request(prompt_path)
-    return request_id
-
-
 def get_image(id: any, server_url: str = None, output_node: str = None):
     url = server_url if server_url else config.COMFYUI_URL
     if not output_node:
@@ -152,6 +76,27 @@ def get_image(id: any, server_url: str = None, output_node: str = None):
         print(response.text)
         return None
     return Image.open(io.BytesIO(response.content))
+
+
+def send_image(filename, upload_name=None, server_url: str = None):
+    url = server_url if server_url else config.COMFYUI_URL
+    if upload_name is None:
+        upload_name = os.path.basename(filename)
+    picture = Image.open(filename).convert("RGBA")
+    picture_data = io.BytesIO()
+    picture.save(picture_data, format="PNG")
+    picture_data.seek(0)
+    files = {
+        "image": (upload_name, picture_data, "image/png"),
+        "overwrite": True,
+    }
+    response = requests.post(f"{url}upload/image", files=files)
+    return response
+
+
+#
+# Image works
+#
 
 
 def save_image(
@@ -179,20 +124,52 @@ def save_image(
     return image_path
 
 
-def send_image(filename, upload_name=None, server_url: str = None):
-    url = server_url if server_url else config.COMFYUI_URL
-    if upload_name is None:
-        upload_name = os.path.basename(filename)
-    picture = Image.open(filename).convert("RGBA")
-    picture_data = io.BytesIO()
-    picture.save(picture_data, format="PNG")
-    picture_data.seek(0)
-    files = {
-        "image": (upload_name, picture_data, "image/png"),
-        "overwrite": True,
-    }
-    response = requests.post(f"{url}upload/image", files=files)
-    return response
+#
+# Workflow builder
+#
+
+
+def t2i_request_build(
+    workflow: str,
+    prompt: str,
+    negative: str,
+    lora: SdLoraYaml,
+    image_size: tuple[int, int],
+) -> any:
+    with importlib.resources.open_text(comfy_api.WORKFLOW, workflow) as f:
+        prompt_path = json.load(f)
+    # パラメータ埋め込み(workflowによって異なる処理)
+    prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
+    prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
+    prompt_path[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
+    prompt_path[config.COMFYUI_NODE_SEED]["inputs"]["noise_seed"] = random.randint(
+        1, 10000000000
+    )
+    prompt_path[config.COMFYUI_NODE_SIZE]["inputs"]["width"] = image_size[0]
+    prompt_path[config.COMFYUI_NODE_SIZE]["inputs"]["height"] = image_size[1]
+    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["lora_name"] = lora.model
+    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_model"] = (
+        lora.strength
+    )
+    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_clip"] = (
+        lora.strength
+    )
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    prompt_path[config.COMFYUI_NODE_OUTPUT]["inputs"]["filename_prefix"] = (
+        f"{current_date}/Bridge"
+    )
+    # lora, prediction
+    if not lora.lora_enabled:
+        prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_model"] = 0
+        prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_clip"] = 0
+    if lora.vpred:
+        prompt_path[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = (
+            "v_prediction"
+        )
+    else:
+        prompt_path[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = "eps"
+
+    return prompt_path
 
 
 #
@@ -202,14 +179,9 @@ def generate(
     prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
 ) -> Image:
     id = None
-    if lora.lora_enabled and lora.vpred:
-        id = t2i_request_vpred_lora(prompt, negative, lora, image_size)
-    elif not lora.lora_enabled and lora.vpred:
-        id = t2i_request_vpred(prompt, negative, lora, image_size)
-    elif lora.lora_enabled and not lora.vpred:
-        id = t2i_request_lora(prompt, negative, lora, image_size)
-    else:
-        id = t2i_request(prompt, negative, lora, image_size)
+    id = send_request(
+        t2i_request_build(comfy_api.NORMAL_WORKFLOW, prompt, negative, lora, image_size)
+    )
     if id:
         await_request(1, 3)
         return get_image(id)
