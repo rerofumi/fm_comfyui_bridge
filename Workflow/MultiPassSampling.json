@@ -608,7 +608,7 @@
       },
       "widgets_values": [
         true,
-        1029837504282883,
+        8463981794298,
         "randomize",
         5
       ]
@@ -932,7 +932,7 @@
       },
       "widgets_values": [
         true,
-        719089458417281,
+        394705520029598,
         "randomize",
         3
       ]
@@ -1152,7 +1152,7 @@
       },
       "widgets_values": [
         true,
-        163883489604463,
+        1102207839725312,
         "randomize",
         3
       ]
@@ -1652,7 +1652,7 @@
       },
       "widgets_values": [
         true,
-        609215780243357,
+        328552943006327,
         "randomize",
         7
       ]
@@ -2215,7 +2215,7 @@
       },
       "widgets_values": [
         true,
-        325085249601374,
+        374311897426313,
         "randomize",
         3
       ]
@@ -2678,7 +2678,7 @@
       },
       "widgets_values": [
         true,
-        5627219669749,
+        201865468110298,
         "randomize",
         3
       ]
@@ -2888,54 +2888,6 @@
         "showOutputText": false,
         "horizontal": false
       }
-    },
-    {
-      "id": 137,
-      "type": "LLLiteLoader",
-      "pos": [
-        8111.9765625,
-        977.5127563476562
-      ],
-      "size": [
-        315,
-        174
-      ],
-      "flags": {},
-      "order": 108,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 209
-        },
-        {
-          "name": "cond_image",
-          "type": "IMAGE",
-          "link": 210
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            197,
-            208
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LLLiteLoader"
-      },
-      "widgets_values": [
-        "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-        0.9500000000000001,
-        36,
-        0,
-        100
-      ]
     },
     {
       "id": 135,
@@ -4806,6 +4758,54 @@
         10,
         1
       ]
+    },
+    {
+      "id": 137,
+      "type": "LLLiteLoader",
+      "pos": [
+        8111.9765625,
+        977.5127563476562
+      ],
+      "size": [
+        315,
+        174
+      ],
+      "flags": {},
+      "order": 108,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 209
+        },
+        {
+          "name": "cond_image",
+          "type": "IMAGE",
+          "link": 210
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            197,
+            208
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LLLiteLoader"
+      },
+      "widgets_values": [
+        "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
+        0.85,
+        36,
+        0,
+        80
+      ]
     }
   ],
   "links": [
@@ -6221,10 +6221,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.6537190082644903,
+      "scale": 0.9571100000000412,
       "offset": [
-        -1644.0202564720955,
-        -1660.4844688843423
+        -6225.172661081157,
+        -1709.6067327668668
       ]
     }
   },

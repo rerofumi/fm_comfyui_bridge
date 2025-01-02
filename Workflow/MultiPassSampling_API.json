@@ -88,7 +88,7 @@
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 609215780243357,
+      "noise_seed": 328552943006327,
       "cfg": 7,
       "model": [
         "7",
@@ -180,7 +180,7 @@
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1029837504282883,
+      "noise_seed": 8463981794298,
       "cfg": 5,
       "model": [
         "32",
@@ -294,7 +294,7 @@
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 719089458417281,
+      "noise_seed": 394705520029598,
       "cfg": 3,
       "model": [
         "54",
@@ -433,7 +433,7 @@
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 163883489604463,
+      "noise_seed": 1102207839725312,
       "cfg": 3,
       "model": [
         "67",
@@ -553,7 +553,7 @@
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 325085249601374,
+      "noise_seed": 374311897426313,
       "cfg": 3,
       "model": [
         "101",
@@ -726,7 +726,7 @@
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 5627219669749,
+      "noise_seed": 201865468110298,
       "cfg": 3,
       "model": [
         "137",
@@ -820,10 +820,10 @@
   "137": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.9500000000000001,
+      "strength": 0.85,
       "steps": 36,
       "start_percent": 0,
-      "end_percent": 100,
+      "end_percent": 80,
       "model": [
         "133",
         0
