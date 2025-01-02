@@ -1002,10 +1002,10 @@ HIGHRES_WORKFLOW = """
   "137": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.9500000000000001,
+      "strength": 0.85,
       "steps": 36,
       "start_percent": 0,
-      "end_percent": 100,
+      "end_percent": 80,
       "model": [
         "133",
         0
@@ -2251,10 +2251,10 @@ HIGHRES_I2I_WORKFLOW = """
   "137": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.9500000000000001,
+      "strength": 0.85,
       "steps": 36,
       "start_percent": 0,
-      "end_percent": 100,
+      "end_percent": 80,
       "model": [
         "133",
         0
