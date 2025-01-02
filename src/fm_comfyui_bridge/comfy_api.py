@@ -270,7 +270,7 @@ HIGHRES_WORKFLOW = """
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 609215780243357,
+      "noise_seed": 199339536225634,
       "cfg": 7,
       "model": [
         "7",
@@ -348,7 +348,7 @@ HIGHRES_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 8,
-      "denoise": 0.75,
+      "denoise": 0.85,
       "model": [
         "31",
         0
@@ -362,7 +362,7 @@ HIGHRES_WORKFLOW = """
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1029837504282883,
+      "noise_seed": 514713864627679,
       "cfg": 5,
       "model": [
         "32",
@@ -476,7 +476,7 @@ HIGHRES_WORKFLOW = """
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 719089458417281,
+      "noise_seed": 847744170770005,
       "cfg": 3,
       "model": [
         "54",
@@ -531,7 +531,7 @@ HIGHRES_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 12,
-      "denoise": 0.8,
+      "denoise": 0.7000000000000001,
       "model": [
         "48",
         0
@@ -615,7 +615,7 @@ HIGHRES_WORKFLOW = """
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 163883489604463,
+      "noise_seed": 752873862696218,
       "cfg": 3,
       "model": [
         "67",
@@ -651,7 +651,7 @@ HIGHRES_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 24,
-      "denoise": 0.65,
+      "denoise": 0.6,
       "model": [
         "68",
         0
@@ -735,7 +735,7 @@ HIGHRES_WORKFLOW = """
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 325085249601374,
+      "noise_seed": 697536245458271,
       "cfg": 3,
       "model": [
         "101",
@@ -876,7 +876,7 @@ HIGHRES_WORKFLOW = """
   },
   "121": {
     "inputs": {
-      "strength": 1,
+      "strength": 0.5,
       "mode": "white",
       "tint_color_hex": "#000000",
       "image": [
@@ -908,7 +908,7 @@ HIGHRES_WORKFLOW = """
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 5627219669749,
+      "noise_seed": 736940489346642,
       "cfg": 3,
       "model": [
         "137",
@@ -979,7 +979,7 @@ HIGHRES_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 36,
-      "denoise": 0.35000000000000003,
+      "denoise": 0.5,
       "model": [
         "137",
         0
@@ -1036,7 +1036,7 @@ HIGHRES_WORKFLOW = """
   },
   "139": {
     "inputs": {
-      "upscale_method": "bislerp",
+      "upscale_method": "bicubic",
       "width": [
         "142",
         0
@@ -1420,7 +1420,7 @@ HIGHRES_I2I_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 8,
-      "denoise": 0.65,
+      "denoise": 0.7000000000000001,
       "model": [
         "12",
         0
@@ -1443,7 +1443,7 @@ HIGHRES_I2I_WORKFLOW = """
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 73413498292232,
+      "noise_seed": 749615918710708,
       "cfg": 7,
       "model": [
         "7",
@@ -1520,8 +1520,8 @@ HIGHRES_I2I_WORKFLOW = """
   "36": {
     "inputs": {
       "scheduler": "simple",
-      "steps": 8,
-      "denoise": 0.75,
+      "steps": 10,
+      "denoise": 0.8,
       "model": [
         "31",
         0
@@ -1535,7 +1535,7 @@ HIGHRES_I2I_WORKFLOW = """
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 526208086316438,
+      "noise_seed": 947114705502369,
       "cfg": 5,
       "model": [
         "32",
@@ -1649,7 +1649,7 @@ HIGHRES_I2I_WORKFLOW = """
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 959489846879735,
+      "noise_seed": 500222440335064,
       "cfg": 3,
       "model": [
         "54",
@@ -1704,7 +1704,7 @@ HIGHRES_I2I_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 12,
-      "denoise": 0.8,
+      "denoise": 0.65,
       "model": [
         "48",
         0
@@ -1788,7 +1788,7 @@ HIGHRES_I2I_WORKFLOW = """
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 117566403599234,
+      "noise_seed": 321317881108140,
       "cfg": 3,
       "model": [
         "67",
@@ -1824,7 +1824,7 @@ HIGHRES_I2I_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 24,
-      "denoise": 0.65,
+      "denoise": 0.6,
       "model": [
         "68",
         0
@@ -1908,7 +1908,7 @@ HIGHRES_I2I_WORKFLOW = """
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1053121515100249,
+      "noise_seed": 249648287766607,
       "cfg": 3,
       "model": [
         "101",
@@ -2016,10 +2016,10 @@ HIGHRES_I2I_WORKFLOW = """
   "101": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.7000000000000001,
+      "strength": 0.85,
       "steps": 36,
-      "start_percent": 15,
-      "end_percent": 90,
+      "start_percent": 0,
+      "end_percent": 80,
       "model": [
         "82",
         0
@@ -2049,7 +2049,7 @@ HIGHRES_I2I_WORKFLOW = """
   },
   "121": {
     "inputs": {
-      "strength": 1,
+      "strength": 0.5,
       "mode": "white",
       "tint_color_hex": "#000000",
       "image": [
@@ -2080,7 +2080,7 @@ HIGHRES_I2I_WORKFLOW = """
   },
   "123": {
     "inputs": {
-      "image": "Rough_00004_.png",
+      "image": "Bridge_00002_.png",
       "upload": "image"
     },
     "class_type": "LoadImage",
@@ -2157,7 +2157,7 @@ HIGHRES_I2I_WORKFLOW = """
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 624170323824143,
+      "noise_seed": 779223433364398,
       "cfg": 3,
       "model": [
         "137",
@@ -2228,7 +2228,7 @@ HIGHRES_I2I_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 36,
-      "denoise": 0.35000000000000003,
+      "denoise": 0.5,
       "model": [
         "137",
         0

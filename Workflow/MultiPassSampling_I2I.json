@@ -644,49 +644,9 @@
       },
       "widgets_values": [
         true,
-        150841702075896,
+        947114705502369,
         "randomize",
         5
-      ]
-    },
-    {
-      "id": 55,
-      "type": "BasicScheduler",
-      "pos": [
-        3491.37060546875,
-        910.8519287109375
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 58,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 80
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            77
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        12,
-        0.8
       ]
     },
     {
@@ -968,7 +928,7 @@
       },
       "widgets_values": [
         true,
-        601713429240880,
+        500222440335064,
         "randomize",
         3
       ]
@@ -1188,7 +1148,7 @@
       },
       "widgets_values": [
         true,
-        165530157058219,
+        321317881108140,
         "randomize",
         3
       ]
@@ -1270,46 +1230,6 @@
         "Node name for S&R": "VAEDecode"
       },
       "widgets_values": []
-    },
-    {
-      "id": 70,
-      "type": "BasicScheduler",
-      "pos": [
-        4595.10595703125,
-        900.9160766601562
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 69,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 103
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            101
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        24,
-        0.65
-      ]
     },
     {
       "id": 81,
@@ -1498,54 +1418,6 @@
       ]
     },
     {
-      "id": 101,
-      "type": "LLLiteLoader",
-      "pos": [
-        6581.5771484375,
-        992.99365234375
-      ],
-      "size": [
-        315,
-        174
-      ],
-      "flags": {},
-      "order": 104,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 158
-        },
-        {
-          "name": "cond_image",
-          "type": "IMAGE",
-          "link": 159
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            160,
-            161
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LLLiteLoader"
-      },
-      "widgets_values": [
-        "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-        0.7000000000000001,
-        36,
-        15,
-        90
-      ]
-    },
-    {
       "id": 2,
       "type": "CR Text",
       "pos": [
@@ -1688,7 +1560,7 @@
       },
       "widgets_values": [
         true,
-        51535866385407,
+        749615918710708,
         "randomize",
         7
       ]
@@ -1774,52 +1646,6 @@
         "Node name for S&R": "VAEEncode"
       },
       "widgets_values": []
-    },
-    {
-      "id": 121,
-      "type": "CR Color Tint",
-      "pos": [
-        1809.558837890625,
-        1538.80322265625
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 76,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 183
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            184,
-            185
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "show_help",
-          "type": "STRING",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CR Color Tint"
-      },
-      "widgets_values": [
-        1,
-        "white",
-        "#000000"
-      ]
     },
     {
       "id": 5,
@@ -2084,46 +1910,6 @@
         "Node name for S&R": "VAEDecode"
       },
       "widgets_values": []
-    },
-    {
-      "id": 36,
-      "type": "BasicScheduler",
-      "pos": [
-        2405.2080078125,
-        902.0407104492188
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 46,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 48
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            53
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        8,
-        0.75
-      ]
     },
     {
       "id": 111,
@@ -2402,7 +2188,7 @@
       },
       "widgets_values": [
         true,
-        190737437926726,
+        249648287766607,
         "randomize",
         3
       ]
@@ -2865,7 +2651,7 @@
       },
       "widgets_values": [
         true,
-        287601736243926,
+        779223433364398,
         "randomize",
         3
       ]
@@ -3075,86 +2861,6 @@
         "showOutputText": false,
         "horizontal": false
       }
-    },
-    {
-      "id": 135,
-      "type": "BasicScheduler",
-      "pos": [
-        7635.38916015625,
-        882.8551025390625
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 113,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 208
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            201
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        36,
-        0.35000000000000003
-      ]
-    },
-    {
-      "id": 13,
-      "type": "BasicScheduler",
-      "pos": [
-        1384.6453857421875,
-        886.4515380859375
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 32,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 19
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            29
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        8,
-        0.65
-      ]
     },
     {
       "id": 7,
@@ -4821,44 +4527,6 @@
       ]
     },
     {
-      "id": 123,
-      "type": "LoadImage",
-      "pos": [
-        523.2122192382812,
-        1146.6414794921875
-      ],
-      "size": [
-        315,
-        314
-      ],
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            188
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoadImage"
-      },
-      "widgets_values": [
-        "Rough_00004_.png",
-        "image"
-      ]
-    },
-    {
       "id": 137,
       "type": "LLLiteLoader",
       "pos": [
@@ -4962,6 +4630,338 @@
         1344,
         768,
         "center"
+      ]
+    },
+    {
+      "id": 101,
+      "type": "LLLiteLoader",
+      "pos": [
+        6581.5771484375,
+        992.99365234375
+      ],
+      "size": [
+        315,
+        174
+      ],
+      "flags": {},
+      "order": 104,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 158
+        },
+        {
+          "name": "cond_image",
+          "type": "IMAGE",
+          "link": 159
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            160,
+            161
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LLLiteLoader"
+      },
+      "widgets_values": [
+        "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
+        0.85,
+        36,
+        0,
+        80
+      ]
+    },
+    {
+      "id": 135,
+      "type": "BasicScheduler",
+      "pos": [
+        7635.38916015625,
+        882.8551025390625
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 113,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 208
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            201
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        36,
+        0.5
+      ]
+    },
+    {
+      "id": 55,
+      "type": "BasicScheduler",
+      "pos": [
+        3491.37060546875,
+        910.8519287109375
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 58,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 80
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            77
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        12,
+        0.65
+      ]
+    },
+    {
+      "id": 70,
+      "type": "BasicScheduler",
+      "pos": [
+        4595.10595703125,
+        900.9160766601562
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 69,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 103
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            101
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        24,
+        0.6
+      ]
+    },
+    {
+      "id": 123,
+      "type": "LoadImage",
+      "pos": [
+        523.2122192382812,
+        1146.6414794921875
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            188
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "Bridge_00002_.png",
+        "image"
+      ]
+    },
+    {
+      "id": 36,
+      "type": "BasicScheduler",
+      "pos": [
+        2405.2080078125,
+        902.0407104492188
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 46,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 48
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            53
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        10,
+        0.8
+      ]
+    },
+    {
+      "id": 13,
+      "type": "BasicScheduler",
+      "pos": [
+        1384.6453857421875,
+        886.4515380859375
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 19
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            29
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        8,
+        0.7000000000000001
+      ]
+    },
+    {
+      "id": 121,
+      "type": "CR Color Tint",
+      "pos": [
+        1809.558837890625,
+        1538.80322265625
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 76,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 183
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            184,
+            185
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Color Tint"
+      },
+      "widgets_values": [
+        0.5,
+        "white",
+        "#000000"
       ]
     }
   ],
@@ -6426,10 +6426,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.8228938249431351,
+      "scale": 0.8264462809917354,
       "offset": [
-        -5733.240734186912,
-        -367.6145607876348
+        -7444.014270467138,
+        -1551.0842300964641
       ]
     }
   },

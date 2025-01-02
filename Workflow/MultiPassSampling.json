@@ -608,49 +608,9 @@
       },
       "widgets_values": [
         true,
-        8463981794298,
+        514713864627679,
         "randomize",
         5
-      ]
-    },
-    {
-      "id": 55,
-      "type": "BasicScheduler",
-      "pos": [
-        3491.37060546875,
-        910.8519287109375
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 54,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 80
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            77
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        12,
-        0.8
       ]
     },
     {
@@ -932,7 +892,7 @@
       },
       "widgets_values": [
         true,
-        394705520029598,
+        847744170770005,
         "randomize",
         3
       ]
@@ -1152,7 +1112,7 @@
       },
       "widgets_values": [
         true,
-        1102207839725312,
+        752873862696218,
         "randomize",
         3
       ]
@@ -1234,46 +1194,6 @@
         "Node name for S&R": "VAEDecode"
       },
       "widgets_values": []
-    },
-    {
-      "id": 70,
-      "type": "BasicScheduler",
-      "pos": [
-        4595.10595703125,
-        900.9160766601562
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 65,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 103
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            101
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        24,
-        0.65
-      ]
     },
     {
       "id": 81,
@@ -1652,7 +1572,7 @@
       },
       "widgets_values": [
         true,
-        328552943006327,
+        199339536225634,
         "randomize",
         7
       ]
@@ -1738,52 +1658,6 @@
         "Node name for S&R": "VAEEncode"
       },
       "widgets_values": []
-    },
-    {
-      "id": 121,
-      "type": "CR Color Tint",
-      "pos": [
-        1809.558837890625,
-        1538.80322265625
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 72,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 183
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            184,
-            185
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "show_help",
-          "type": "STRING",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CR Color Tint"
-      },
-      "widgets_values": [
-        1,
-        "white",
-        "#000000"
-      ]
     },
     {
       "id": 5,
@@ -1897,46 +1771,6 @@
         "Node name for S&R": "PreviewImage"
       },
       "widgets_values": []
-    },
-    {
-      "id": 36,
-      "type": "BasicScheduler",
-      "pos": [
-        2405.2080078125,
-        902.0407104492188
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 43,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 48
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            53
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        8,
-        0.75
-      ]
     },
     {
       "id": 111,
@@ -2215,7 +2049,7 @@
       },
       "widgets_values": [
         true,
-        374311897426313,
+        697536245458271,
         "randomize",
         3
       ]
@@ -2257,63 +2091,6 @@
         "showOutputText": false,
         "horizontal": false
       }
-    },
-    {
-      "id": 139,
-      "type": "LatentUpscale",
-      "pos": [
-        7226.17333984375,
-        1663.703857421875
-      ],
-      "size": [
-        282.1877136230469,
-        130
-      ],
-      "flags": {},
-      "order": 104,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 211
-        },
-        {
-          "name": "width",
-          "type": "INT",
-          "link": 222,
-          "widget": {
-            "name": "width"
-          }
-        },
-        {
-          "name": "height",
-          "type": "INT",
-          "link": 221,
-          "widget": {
-            "name": "height"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            214
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LatentUpscale"
-      },
-      "widgets_values": [
-        "bislerp",
-        512,
-        512,
-        "disabled"
-      ]
     },
     {
       "id": 90,
@@ -2678,7 +2455,7 @@
       },
       "widgets_values": [
         true,
-        201865468110298,
+        736940489346642,
         "randomize",
         3
       ]
@@ -2890,100 +2667,6 @@
       }
     },
     {
-      "id": 135,
-      "type": "BasicScheduler",
-      "pos": [
-        7635.38916015625,
-        882.8551025390625
-      ],
-      "size": [
-        315,
-        106
-      ],
-      "flags": {},
-      "order": 109,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 208
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            201
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicScheduler"
-      },
-      "widgets_values": [
-        "simple",
-        36,
-        0.35000000000000003
-      ]
-    },
-    {
-      "id": 7,
-      "type": "LoraLoader",
-      "pos": [
-        1389.0445556640625,
-        1042.651611328125
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 29,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 18
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 9
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            24
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            235,
-            236
-          ],
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        "lora-ix-tillhi-v1.safetensors",
-        0.6,
-        0.6
-      ]
-    },
-    {
       "id": 3,
       "type": "Reroute",
       "pos": [
@@ -3158,60 +2841,6 @@
       ]
     },
     {
-      "id": 32,
-      "type": "LoraLoader",
-      "pos": [
-        2409.607177734375,
-        1058.2412109375
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 42,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 45
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 59
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            49
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            243,
-            244
-          ],
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        "lora-ix-tillhi-v1.safetensors",
-        0.8,
-        0.8
-      ]
-    },
-    {
       "id": 41,
       "type": "Reroute",
       "pos": [
@@ -3336,107 +2965,6 @@
       "widgets_values": [
         "",
         true
-      ]
-    },
-    {
-      "id": 155,
-      "type": "CLIPTextEncode",
-      "pos": [
-        2442.1201171875,
-        1434.6365966796875
-      ],
-      "size": [
-        262.0848083496094,
-        91.33955383300781
-      ],
-      "flags": {},
-      "order": 52,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 244
-        },
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 246,
-          "widget": {
-            "name": "text"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            242
-          ],
-          "slot_index": 0
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "",
-        true
-      ]
-    },
-    {
-      "id": 54,
-      "type": "LoraLoader",
-      "pos": [
-        3495.769775390625,
-        1067.05224609375
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 53,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 79
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 93
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            73
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            247,
-            248
-          ],
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        "lora-ix-tillhi-v1.safetensors",
-        0.9,
-        0.9
       ]
     },
     {
@@ -3614,60 +3142,6 @@
       ]
     },
     {
-      "id": 67,
-      "type": "LoraLoader",
-      "pos": [
-        4599.50537109375,
-        1057.1163330078125
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 64,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 96
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 112
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            97
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            253,
-            254
-          ],
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        "lora-ix-tillhi-v1.safetensors",
-        1,
-        1
-      ]
-    },
-    {
       "id": 76,
       "type": "Reroute",
       "pos": [
@@ -3839,60 +3313,6 @@
       "widgets_values": [
         "",
         true
-      ]
-    },
-    {
-      "id": 82,
-      "type": "LoraLoader",
-      "pos": [
-        6109.38916015625,
-        1054.536376953125
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 75,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 119
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 130
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            158
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            261,
-            262
-          ],
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        "lora-ix-tillhi-v1.safetensors",
-        1,
-        1
       ]
     },
     {
@@ -4161,60 +3581,6 @@
       "widgets_values": [
         "",
         true
-      ]
-    },
-    {
-      "id": 133,
-      "type": "LoraLoader",
-      "pos": [
-        7639.78857421875,
-        1039.055419921875
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 82,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 205
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 231
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            209
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            267,
-            268
-          ],
-          "slot_index": 1
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        "lora-ix-tillhi-v1.safetensors",
-        1,
-        1
       ]
     },
     {
@@ -4516,44 +3882,6 @@
       ]
     },
     {
-      "id": 1,
-      "type": "CR Text",
-      "pos": [
-        510.2823181152344,
-        81.54740905761719
-      ],
-      "size": [
-        400,
-        200
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "text",
-          "type": "*",
-          "links": [
-            1
-          ],
-          "slot_index": 0
-        },
-        {
-          "name": "show_help",
-          "type": "STRING",
-          "links": null
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CR Text"
-      },
-      "widgets_values": [
-        "tillhi, masterpiece, best quality, 1girl, waitress, cafe bar, frill skirt, disher",
-        true
-      ]
-    },
-    {
       "id": 22,
       "type": "Reroute",
       "pos": [
@@ -4805,6 +4133,678 @@
         36,
         0,
         80
+      ]
+    },
+    {
+      "id": 155,
+      "type": "CLIPTextEncode",
+      "pos": [
+        2439.060791015625,
+        1437.696044921875
+      ],
+      "size": [
+        262.0848083496094,
+        91.33955383300781
+      ],
+      "flags": {},
+      "order": 52,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 244
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 246,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            242
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "",
+        true
+      ]
+    },
+    {
+      "id": 139,
+      "type": "LatentUpscale",
+      "pos": [
+        7226.17333984375,
+        1663.703857421875
+      ],
+      "size": [
+        282.1877136230469,
+        130
+      ],
+      "flags": {},
+      "order": 104,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 211
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 222,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 221,
+          "widget": {
+            "name": "height"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            214
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LatentUpscale"
+      },
+      "widgets_values": [
+        "bicubic",
+        512,
+        512,
+        "disabled"
+      ]
+    },
+    {
+      "id": 135,
+      "type": "BasicScheduler",
+      "pos": [
+        7635.38916015625,
+        882.8551025390625
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 109,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 208
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            201
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        36,
+        0.5
+      ]
+    },
+    {
+      "id": 55,
+      "type": "BasicScheduler",
+      "pos": [
+        3491.37060546875,
+        910.8519287109375
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 54,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 80
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            77
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        12,
+        0.7000000000000001
+      ]
+    },
+    {
+      "id": 70,
+      "type": "BasicScheduler",
+      "pos": [
+        4595.10595703125,
+        900.9160766601562
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 65,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 103
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            101
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        24,
+        0.6
+      ]
+    },
+    {
+      "id": 36,
+      "type": "BasicScheduler",
+      "pos": [
+        2405.2080078125,
+        902.0407104492188
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 43,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 48
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            53
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        8,
+        0.85
+      ]
+    },
+    {
+      "id": 1,
+      "type": "CR Text",
+      "pos": [
+        510.2823181152344,
+        81.54740905761719
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "*",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Text"
+      },
+      "widgets_values": [
+        "tillhi, masterpiece, best quality, 1girl, waitress, cafe bar, frill skirt, disher",
+        true
+      ]
+    },
+    {
+      "id": 7,
+      "type": "LoraLoader",
+      "pos": [
+        1389.0445556640625,
+        1042.651611328125
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 18
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            24
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            235,
+            236
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "lora-ix-tillhi-v1.safetensors",
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "id": 32,
+      "type": "LoraLoader",
+      "pos": [
+        2409.607177734375,
+        1058.2412109375
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 42,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 45
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 59
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            49
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            243,
+            244
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "lora-ix-tillhi-v1.safetensors",
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "id": 54,
+      "type": "LoraLoader",
+      "pos": [
+        3495.769775390625,
+        1067.05224609375
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 53,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 79
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 93
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            73
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            247,
+            248
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "lora-ix-tillhi-v1.safetensors",
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "id": 67,
+      "type": "LoraLoader",
+      "pos": [
+        4599.50537109375,
+        1057.1163330078125
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 64,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 96
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 112
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            97
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            253,
+            254
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "lora-ix-tillhi-v1.safetensors",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 82,
+      "type": "LoraLoader",
+      "pos": [
+        6109.38916015625,
+        1054.536376953125
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 75,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 119
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 130
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            158
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            261,
+            262
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "lora-ix-tillhi-v1.safetensors",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 133,
+      "type": "LoraLoader",
+      "pos": [
+        7639.78857421875,
+        1039.055419921875
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 82,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 205
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 231
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            209
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            267,
+            268
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "lora-ix-tillhi-v1.safetensors",
+        1,
+        1
+      ]
+    },
+    {
+      "id": 121,
+      "type": "CR Color Tint",
+      "pos": [
+        1809.558837890625,
+        1538.80322265625
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 72,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 183
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            184,
+            185
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CR Color Tint"
+      },
+      "widgets_values": [
+        0.5,
+        "white",
+        "#000000"
       ]
     }
   ],
@@ -6221,10 +6221,10 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.9571100000000412,
+      "scale": 0.573085533011682,
       "offset": [
-        -6225.172661081157,
-        -1709.6067327668668
+        -7465.903044013225,
+        -723.3421951122782
       ]
     }
   },

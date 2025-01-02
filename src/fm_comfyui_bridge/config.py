@@ -8,7 +8,14 @@ COMFYUI_NODE_CHECKPOINT = "4"
 COMFYUI_NODE_HR_CHECKPOINT = "5"
 # ComfyUI LoRA checkpoint node
 COMFYUI_NODE_LORA_CHECKPOINT = "19"
-COMFYUI_NODE_HR_LORA_CHECKPOINT = ["7", "32", "54", "67", "82", "133"]
+COMFYUI_NODE_HR_LORA_CHECKPOINT = [
+    ("7", 0.6),
+    ("32", 0.8),
+    ("54", 0.9),
+    ("67", 1.0),
+    ("82", 1.0),
+    ("133", 1.0),
+]
 # ComfyUI prompt node
 COMFYUI_NODE_PROMPT = "6"
 COMFYUI_NODE_HR_PROMPT = "1"

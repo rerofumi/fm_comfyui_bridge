@@ -88,7 +88,7 @@
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 328552943006327,
+      "noise_seed": 199339536225634,
       "cfg": 7,
       "model": [
         "7",
@@ -166,7 +166,7 @@
     "inputs": {
       "scheduler": "simple",
       "steps": 8,
-      "denoise": 0.75,
+      "denoise": 0.85,
       "model": [
         "31",
         0
@@ -180,7 +180,7 @@
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 8463981794298,
+      "noise_seed": 514713864627679,
       "cfg": 5,
       "model": [
         "32",
@@ -294,7 +294,7 @@
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 394705520029598,
+      "noise_seed": 847744170770005,
       "cfg": 3,
       "model": [
         "54",
@@ -349,7 +349,7 @@
     "inputs": {
       "scheduler": "simple",
       "steps": 12,
-      "denoise": 0.8,
+      "denoise": 0.7000000000000001,
       "model": [
         "48",
         0
@@ -433,7 +433,7 @@
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1102207839725312,
+      "noise_seed": 752873862696218,
       "cfg": 3,
       "model": [
         "67",
@@ -469,7 +469,7 @@
     "inputs": {
       "scheduler": "simple",
       "steps": 24,
-      "denoise": 0.65,
+      "denoise": 0.6,
       "model": [
         "68",
         0
@@ -553,7 +553,7 @@
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 374311897426313,
+      "noise_seed": 697536245458271,
       "cfg": 3,
       "model": [
         "101",
@@ -694,7 +694,7 @@
   },
   "121": {
     "inputs": {
-      "strength": 1,
+      "strength": 0.5,
       "mode": "white",
       "tint_color_hex": "#000000",
       "image": [
@@ -726,7 +726,7 @@
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 201865468110298,
+      "noise_seed": 736940489346642,
       "cfg": 3,
       "model": [
         "137",
@@ -797,7 +797,7 @@
     "inputs": {
       "scheduler": "simple",
       "steps": 36,
-      "denoise": 0.35000000000000003,
+      "denoise": 0.5,
       "model": [
         "137",
         0
@@ -854,7 +854,7 @@
   },
   "139": {
     "inputs": {
-      "upscale_method": "bislerp",
+      "upscale_method": "bicubic",
       "width": [
         "142",
         0

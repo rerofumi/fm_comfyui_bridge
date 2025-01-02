@@ -195,9 +195,9 @@ def t2i_highreso_request_build(
     prompt_path[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
     prompt_path[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
     for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
-        prompt_path[node]["inputs"]["lora_name"] = lora.model
-        prompt_path[node]["inputs"]["strength_model"] = lora.strength
-        prompt_path[node]["inputs"]["strength_clip"] = lora.strength
+        prompt_path[node[0]]["inputs"]["lora_name"] = lora.model
+        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength * node[1]
+        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength * node[1]
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
     prompt_path[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
         f"{current_date}/Bridge"
