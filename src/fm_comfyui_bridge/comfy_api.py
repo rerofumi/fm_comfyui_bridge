@@ -183,7 +183,7 @@ HIGHRES_WORKFLOW = """
 {
   "1": {
     "inputs": {
-      "text": "masterpiece, best quality, 1girl",
+      "text": "tillhi, masterpiece, best quality, 1girl, waitress, cafe bar, frill skirt, disher",
       "speak_and_recognation": true
     },
     "class_type": "CR Text",
@@ -213,8 +213,8 @@ HIGHRES_WORKFLOW = """
   "7": {
     "inputs": {
       "lora_name": "lora-ix-tillhi-v1.safetensors",
-      "strength_model": 0.5,
-      "strength_clip": 0.5,
+      "strength_model": 0.6,
+      "strength_clip": 0.6,
       "model": [
         "12",
         0
@@ -227,70 +227,6 @@ HIGHRES_WORKFLOW = """
     "class_type": "LoraLoader",
     "_meta": {
       "title": "Load LoRA"
-    }
-  },
-  "10": {
-    "inputs": {
-      "text": [
-        "1",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "7",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
-  "11": {
-    "inputs": {
-      "text": [
-        "2",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "7",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
     }
   },
   "12": {
@@ -309,9 +245,9 @@ HIGHRES_WORKFLOW = """
   },
   "13": {
     "inputs": {
-      "scheduler": "simple",
-      "steps": 6,
-      "denoise": 0.9500000000000001,
+      "scheduler": "normal",
+      "steps": 10,
+      "denoise": 1,
       "model": [
         "12",
         0
@@ -320,23 +256,6 @@ HIGHRES_WORKFLOW = """
     "class_type": "BasicScheduler",
     "_meta": {
       "title": "BasicScheduler"
-    }
-  },
-  "18": {
-    "inputs": {
-      "width": [
-        "115",
-        1
-      ],
-      "height": [
-        "116",
-        1
-      ],
-      "batch_size": 1
-    },
-    "class_type": "EmptyLatentImage",
-    "_meta": {
-      "title": "Empty Latent Image"
     }
   },
   "19": {
@@ -351,18 +270,18 @@ HIGHRES_WORKFLOW = """
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 267154279535817,
+      "noise_seed": 609215780243357,
       "cfg": 7,
       "model": [
         "7",
         0
       ],
       "positive": [
-        "10",
+        "152",
         0
       ],
       "negative": [
-        "11",
+        "153",
         0
       ],
       "sampler": [
@@ -374,7 +293,7 @@ HIGHRES_WORKFLOW = """
         0
       ],
       "latent_image": [
-        "18",
+        "166",
         0
       ]
     },
@@ -416,70 +335,6 @@ HIGHRES_WORKFLOW = """
       "title": "Load LoRA"
     }
   },
-  "33": {
-    "inputs": {
-      "text": [
-        "1",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "32",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
-  "34": {
-    "inputs": {
-      "text": [
-        "2",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "32",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
   "35": {
     "inputs": {
       "sampler_name": "euler"
@@ -492,8 +347,8 @@ HIGHRES_WORKFLOW = """
   "36": {
     "inputs": {
       "scheduler": "simple",
-      "steps": 6,
-      "denoise": 0.85,
+      "steps": 8,
+      "denoise": 0.75,
       "model": [
         "31",
         0
@@ -507,18 +362,18 @@ HIGHRES_WORKFLOW = """
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 810346326537406,
+      "noise_seed": 1029837504282883,
       "cfg": 5,
       "model": [
         "32",
         0
       ],
       "positive": [
-        "33",
+        "154",
         0
       ],
       "negative": [
-        "34",
+        "155",
         0
       ],
       "sampler": [
@@ -530,7 +385,7 @@ HIGHRES_WORKFLOW = """
         0
       ],
       "latent_image": [
-        "20",
+        "122",
         0
       ]
     },
@@ -558,7 +413,7 @@ HIGHRES_WORKFLOW = """
   "44": {
     "inputs": {
       "images": [
-        "43",
+        "121",
         0
       ]
     },
@@ -609,70 +464,6 @@ HIGHRES_WORKFLOW = """
       "title": "ModelSamplingDiscrete"
     }
   },
-  "49": {
-    "inputs": {
-      "text": [
-        "1",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "54",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
-  "50": {
-    "inputs": {
-      "text": [
-        "2",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "54",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
   "51": {
     "inputs": {
       "sampler_name": "euler"
@@ -685,18 +476,18 @@ HIGHRES_WORKFLOW = """
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1107390956268487,
+      "noise_seed": 719089458417281,
       "cfg": 3,
       "model": [
         "54",
         0
       ],
       "positive": [
-        "49",
+        "156",
         0
       ],
       "negative": [
-        "50",
+        "157",
         0
       ],
       "sampler": [
@@ -779,70 +570,6 @@ HIGHRES_WORKFLOW = """
       "title": "VAE Decode"
     }
   },
-  "63": {
-    "inputs": {
-      "text": [
-        "1",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "67",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
-  "64": {
-    "inputs": {
-      "text": [
-        "2",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "67",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
   "65": {
     "inputs": {
       "sampler_name": "euler"
@@ -888,18 +615,18 @@ HIGHRES_WORKFLOW = """
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 442188505345866,
+      "noise_seed": 163883489604463,
       "cfg": 3,
       "model": [
         "67",
         0
       ],
       "positive": [
-        "63",
+        "158",
         0
       ],
       "negative": [
-        "64",
+        "159",
         0
       ],
       "sampler": [
@@ -963,70 +690,6 @@ HIGHRES_WORKFLOW = """
       "title": "Preview Image"
     }
   },
-  "78": {
-    "inputs": {
-      "text": [
-        "1",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "82",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
-  "79": {
-    "inputs": {
-      "text": [
-        "2",
-        0
-      ],
-      "parser": "A1111",
-      "mean_normalization": true,
-      "multi_conditioning": false,
-      "use_old_emphasis_implementation": false,
-      "with_SDXL": false,
-      "ascore": 6,
-      "width": 1024,
-      "height": 1024,
-      "crop_w": 0,
-      "crop_h": 0,
-      "target_width": 1024,
-      "target_height": 1024,
-      "text_g": "",
-      "text_l": "",
-      "smZ_steps": 1,
-      "speak_and_recognation": true,
-      "clip": [
-        "82",
-        1
-      ]
-    },
-    "class_type": "smZ CLIPTextEncode",
-    "_meta": {
-      "title": "CLIP Text Encode++"
-    }
-  },
   "80": {
     "inputs": {
       "sampler_name": "euler_ancestral"
@@ -1072,18 +735,18 @@ HIGHRES_WORKFLOW = """
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 691435221795426,
+      "noise_seed": 325085249601374,
       "cfg": 3,
       "model": [
         "101",
         0
       ],
       "positive": [
-        "78",
+        "160",
         0
       ],
       "negative": [
-        "79",
+        "161",
         0
       ],
       "sampler": [
@@ -1122,10 +785,7 @@ HIGHRES_WORKFLOW = """
   "90": {
     "inputs": {
       "upscale_method": "bicubic",
-      "scale_by": [
-        "114",
-        0
-      ],
+      "scale_by": 1.5,
       "samples": [
         "69",
         0
@@ -1203,9 +863,9 @@ HIGHRES_WORKFLOW = """
   },
   "111": {
     "inputs": {
-      "filename_prefix": "2025-01-01/HighRes",
+      "filename_prefix": "2025-01-02/HighRes",
       "images": [
-        "93",
+        "148",
         0
       ]
     },
@@ -1214,31 +874,479 @@ HIGHRES_WORKFLOW = """
       "title": "Save Image"
     }
   },
-  "114": {
+  "121": {
     "inputs": {
-      "value": 1.5
+      "strength": 1,
+      "mode": "white",
+      "tint_color_hex": "#000000",
+      "image": [
+        "43",
+        0
+      ]
     },
-    "class_type": "CR Value",
+    "class_type": "CR Color Tint",
     "_meta": {
-      "title": "⚙️Upscale Ratio"
+      "title": "🎨 CR Color Tint"
     }
   },
-  "115": {
+  "122": {
+    "inputs": {
+      "pixels": [
+        "121",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "128": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 5627219669749,
+      "cfg": 3,
+      "model": [
+        "137",
+        0
+      ],
+      "positive": [
+        "162",
+        0
+      ],
+      "negative": [
+        "163",
+        0
+      ],
+      "sampler": [
+        "136",
+        0
+      ],
+      "sigmas": [
+        "135",
+        0
+      ],
+      "latent_image": [
+        "139",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "SamplerCustom"
+    }
+  },
+  "133": {
+    "inputs": {
+      "lora_name": "lora-ix-tillhi-v1.safetensors",
+      "strength_model": 1,
+      "strength_clip": 1,
+      "model": [
+        "138",
+        0
+      ],
+      "clip": [
+        "5",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "134": {
+    "inputs": {
+      "samples": [
+        "139",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "135": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": 36,
+      "denoise": 0.35000000000000003,
+      "model": [
+        "137",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "136": {
+    "inputs": {
+      "sampler_name": "euler_ancestral"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "137": {
+    "inputs": {
+      "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
+      "strength": 0.9500000000000001,
+      "steps": 36,
+      "start_percent": 0,
+      "end_percent": 100,
+      "model": [
+        "133",
+        0
+      ],
+      "cond_image": [
+        "134",
+        0
+      ]
+    },
+    "class_type": "LLLiteLoader",
+    "_meta": {
+      "title": "Load LLLite"
+    }
+  },
+  "138": {
+    "inputs": {
+      "sampling": "v_prediction",
+      "zsnr": false,
+      "model": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingDiscrete",
+    "_meta": {
+      "title": "ModelSamplingDiscrete"
+    }
+  },
+  "139": {
+    "inputs": {
+      "upscale_method": "bislerp",
+      "width": [
+        "142",
+        0
+      ],
+      "height": [
+        "147",
+        0
+      ],
+      "crop": "disabled",
+      "samples": [
+        "84",
+        0
+      ]
+    },
+    "class_type": "LatentUpscale",
+    "_meta": {
+      "title": "Upscale Latent"
+    }
+  },
+  "142": {
+    "inputs": {
+      "integer": [
+        "164",
+        1
+      ],
+      "multiple": 2
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "147": {
+    "inputs": {
+      "integer": [
+        "165",
+        1
+      ],
+      "multiple": 2
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "148": {
+    "inputs": {
+      "samples": [
+        "128",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "149": {
+    "inputs": {
+      "images": [
+        "148",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "152": {
+    "inputs": {
+      "text": [
+        "1",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "7",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "153": {
+    "inputs": {
+      "text": [
+        "2",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "7",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "154": {
+    "inputs": {
+      "text": [
+        "1",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "32",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "155": {
+    "inputs": {
+      "text": [
+        "2",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "32",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "156": {
+    "inputs": {
+      "text": [
+        "1",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "54",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "157": {
+    "inputs": {
+      "text": [
+        "2",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "54",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "158": {
+    "inputs": {
+      "text": [
+        "1",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "67",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "159": {
+    "inputs": {
+      "text": [
+        "2",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "67",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "160": {
+    "inputs": {
+      "text": [
+        "1",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "82",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "161": {
+    "inputs": {
+      "text": [
+        "2",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "82",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "162": {
+    "inputs": {
+      "text": [
+        "1",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "133",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "163": {
+    "inputs": {
+      "text": [
+        "2",
+        0
+      ],
+      "speak_and_recognation": true,
+      "clip": [
+        "133",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "164": {
     "inputs": {
       "value": 1344
     },
     "class_type": "CR Value",
     "_meta": {
-      "title": "Base Width"
+      "title": "BaseSize-Width"
     }
   },
-  "116": {
+  "165": {
     "inputs": {
       "value": 768
     },
     "class_type": "CR Value",
     "_meta": {
-      "title": "Base Height"
+      "title": "BaseSize-Height"
+    }
+  },
+  "166": {
+    "inputs": {
+      "width": [
+        "164",
+        1
+      ],
+      "height": [
+        "165",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
     }
   }
 }

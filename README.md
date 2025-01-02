@@ -33,7 +33,6 @@ positive_prompt(text), negative_prompt(text), 出力モデル等の設定(SdLora
 以下のカスタムノードを使っています(できるだけ挙げましたが抜け漏れがあるかもしれません)
 
 - ComfyUI_Comfyroll_CustomNodes
-- ComfyUI_smZNodes
 - ControlNet-LLLite-ComfyUI
   - tile model: bdsqlsz_controlllite_xl_tile_anime_beta.safetensors
 
@@ -115,6 +114,10 @@ save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
   - `trigger`: LoRAのトリガーワードを指定します。
 
 ## 変更履歴
+
+### バージョン 0.5.3
+
+- ハイレゾ Workflow 更新、パラメータ調整
 
 ### バージョン 0.5.0
 

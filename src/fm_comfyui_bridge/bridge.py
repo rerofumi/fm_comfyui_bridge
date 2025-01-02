@@ -135,7 +135,7 @@ def t2i_request_build(
     lora: SdLoraYaml,
     image_size: tuple[int, int],
 ) -> any:
-    prompt_path = json.loads(comfy_api.NORMAL_WORKFLOW)
+    prompt_path = json.loads(workflow)
     # パラメータ埋め込み(workflowによって異なる処理)
     prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
     prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
@@ -177,7 +177,7 @@ def t2i_highreso_request_build(
     lora: SdLoraYaml,
     image_size: tuple[int, int],
 ) -> any:
-    prompt_path = json.loads(comfy_api.HIGHRES_WORKFLOW)
+    prompt_path = json.loads(workflow)
     # パラメータ埋め込み(workflowによって異なる処理)
     prompt_path[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
         lora.checkpoint
