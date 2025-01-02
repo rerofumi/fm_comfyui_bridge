@@ -28,5 +28,7 @@ COMFYUI_NODE_HR_SIZE_HEIGHT = "165"
 # ComfyUI sampling mode node
 COMFYUI_NODE_SAMPLING_DISCRETE = "16"
 COMFYUI_NODE_HR_SAMPLING_DISCRETE = ["12", "31", "48", "68", "83", "138"]
+# ComfyUI load image node
+COMFYUI_NODE_HR_LOAD_IMAGE = "123"
 
 OUTPUTS_DIR = "./outputs/"

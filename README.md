@@ -59,6 +59,17 @@ sample = api.generate(prompt="1girl", negative="low quality", lora=lora_yaml_ins
 sample = api.generate_highreso(prompt="1girl", negative="low quality", lora=lora_yaml_instance, image_size=(1024, 1024))
 ```
 
+#### `generate_i2i_highreso(prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int], inputfile: str) -> Image`
+
+マルチパスサンプリング＆アップスケールを使用した Image2Image を行います。
+入力画像ファイルのパスを追加で与えてください。
+入力画像はラフスケッチ程度に扱われプロンプトのほうが支配的です。
+詳細はワークフローファイル `MultiPassSampling_i2i.json` を参照してください。
+
+```
+sample = api.generate_i2i_highreso(prompt="1girl", negative="low quality", lora=lora_yaml_instance, image_size=(1024, 1024), "C:/input_image.png")
+```
+
 
 #### `save_image(image, posi=None, nega=None, filename=None, workspace=None, output_dir=None)`
 
@@ -114,6 +125,10 @@ save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
   - `trigger`: LoRAのトリガーワードを指定します。
 
 ## 変更履歴
+
+### バージョン 0.5.4
+
+- ハイレゾ Workflow を用いた I2I generate を追加
 
 ### バージョン 0.5.3
 

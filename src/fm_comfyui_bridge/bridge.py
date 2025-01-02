@@ -123,6 +123,12 @@ def save_image(
     return image_path
 
 
+def get_input_image_name():
+    current_time = int(time.time())
+    input_image_name = f"bridge_i2i_input_{current_time}.png"
+    return input_image_name
+
+
 #
 # Workflow builder
 #
@@ -236,6 +242,29 @@ def generate_highreso(
             comfy_api.HIGHRES_WORKFLOW, prompt, negative, lora, image_size
         )
     )
+    if id:
+        await_request(1, 3)
+        return get_image(id, output_node=config.COMFYUI_NODE_HR_OUTPUT)
+    return None
+
+
+def generate_i2i_highreso(
+    prompt: str,
+    negative: str,
+    lora: SdLoraYaml,
+    image_size: tuple[int, int],
+    input_image_filepath: str,
+) -> Image:
+    # input image upload
+    upload_image = get_input_image_name()
+    send_image(input_image_filepath, upload_name=upload_image)
+    prompt = t2i_highreso_request_build(
+        comfy_api.HIGHRES_I2I_WORKFLOW, prompt, negative, lora, image_size
+    )
+    prompt[config.COMFYUI_NODE_HR_LOAD_IMAGE]["inputs"]["image"] = upload_image
+    #
+    id = None
+    id = send_request(prompt)
     if id:
         await_request(1, 3)
         return get_image(id, output_node=config.COMFYUI_NODE_HR_OUTPUT)
