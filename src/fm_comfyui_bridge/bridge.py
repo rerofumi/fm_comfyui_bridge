@@ -205,8 +205,8 @@ def t2i_highreso_request_build(
     # lora, prediction
     if not lora.lora_enabled:
         for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
-            prompt_path[node]["inputs"]["strength_model"] = 0
-            prompt_path[node]["inputs"]["strength_clip"] = 0
+            prompt_path[node[0]]["inputs"]["strength_model"] = 0
+            prompt_path[node[0]]["inputs"]["strength_clip"] = 0
     if lora.vpred:
         for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
             prompt_path[node]["inputs"]["sampling"] = "v_prediction"
