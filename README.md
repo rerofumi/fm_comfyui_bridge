@@ -126,6 +126,10 @@ save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
 
 ## 変更履歴
 
+### バージョン 0.6.0
+
+- バージョン更新、PyPI 登録
+
 ### バージョン 0.5.6
 
 - ハイレゾ Workflow を用いた I2I generate を追加、パラメータ調整

@@ -1,10 +1,18 @@
 [project]
 name = "fm-comfyui-bridge"
-version = "0.5.6"
+version = "0.6.0"
 description = "ComfyUI access bridge"
 readme = "README.md"
 authors = [
     { name = "rerofumi", email = "rero2@yuumu.org" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.10"
 dependencies = [
@@ -12,6 +20,9 @@ dependencies = [
     "pyyaml>=6.0.2",
     "requests>=2.32.3",
 ]
+
+[project.urls]
+Homepage = "https://github.com/rerofumi/fm_comfyui_bridge"
 
 [build-system]
 requires = ["hatchling"]
@@ -28,4 +39,5 @@ testpaths = [
 dev = [
     "pytest>=8.3.3",
 ]
+
 
