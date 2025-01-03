@@ -270,7 +270,7 @@ HIGHRES_WORKFLOW = """
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 7420489756954,
+      "noise_seed": 173407566755529,
       "cfg": 7,
       "model": [
         "7",
@@ -362,7 +362,7 @@ HIGHRES_WORKFLOW = """
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 77383915073527,
+      "noise_seed": 95099951283096,
       "cfg": 5,
       "model": [
         "32",
@@ -476,7 +476,7 @@ HIGHRES_WORKFLOW = """
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1037604105875951,
+      "noise_seed": 1069930693430089,
       "cfg": 3,
       "model": [
         "54",
@@ -615,7 +615,7 @@ HIGHRES_WORKFLOW = """
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1109790844095338,
+      "noise_seed": 842504059028136,
       "cfg": 3,
       "model": [
         "67",
@@ -735,7 +735,7 @@ HIGHRES_WORKFLOW = """
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 959284084180872,
+      "noise_seed": 346794832178234,
       "cfg": 3,
       "model": [
         "101",
@@ -829,10 +829,10 @@ HIGHRES_WORKFLOW = """
   "101": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.7000000000000001,
+      "strength": 0.85,
       "steps": 36,
-      "start_percent": 15,
-      "end_percent": 90,
+      "start_percent": 0,
+      "end_percent": 80,
       "model": [
         "82",
         0
@@ -894,7 +894,7 @@ HIGHRES_WORKFLOW = """
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1111868531451977,
+      "noise_seed": 79419633471033,
       "cfg": 3,
       "model": [
         "137",
@@ -965,7 +965,7 @@ HIGHRES_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 36,
-      "denoise": 0.5,
+      "denoise": 0.2,
       "model": [
         "137",
         0
@@ -988,10 +988,10 @@ HIGHRES_WORKFLOW = """
   "137": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.85,
+      "strength": 1,
       "steps": 36,
       "start_percent": 0,
-      "end_percent": 80,
+      "end_percent": 100,
       "model": [
         "133",
         0
@@ -1541,7 +1541,7 @@ HIGHRES_I2I_WORKFLOW = """
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 331791514998466,
+      "noise_seed": 942231486746652,
       "cfg": 7,
       "model": [
         "7",
@@ -1633,7 +1633,7 @@ HIGHRES_I2I_WORKFLOW = """
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 641945219174512,
+      "noise_seed": 6078924935363,
       "cfg": 5,
       "model": [
         "32",
@@ -1747,7 +1747,7 @@ HIGHRES_I2I_WORKFLOW = """
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 737314571388662,
+      "noise_seed": 511133294639095,
       "cfg": 3,
       "model": [
         "54",
@@ -1886,7 +1886,7 @@ HIGHRES_I2I_WORKFLOW = """
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 920085492297380,
+      "noise_seed": 955774721657174,
       "cfg": 3,
       "model": [
         "67",
@@ -2006,7 +2006,7 @@ HIGHRES_I2I_WORKFLOW = """
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 827367939187955,
+      "noise_seed": 229634304802029,
       "cfg": 3,
       "model": [
         "101",
@@ -2241,7 +2241,7 @@ HIGHRES_I2I_WORKFLOW = """
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 599487029160006,
+      "noise_seed": 54659552276610,
       "cfg": 3,
       "model": [
         "137",
@@ -2312,7 +2312,7 @@ HIGHRES_I2I_WORKFLOW = """
     "inputs": {
       "scheduler": "simple",
       "steps": 36,
-      "denoise": 0.5,
+      "denoise": 0.2,
       "model": [
         "137",
         0
@@ -2335,10 +2335,10 @@ HIGHRES_I2I_WORKFLOW = """
   "137": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.85,
+      "strength": 1,
       "steps": 36,
       "start_percent": 0,
-      "end_percent": 80,
+      "end_percent": 100,
       "model": [
         "133",
         0

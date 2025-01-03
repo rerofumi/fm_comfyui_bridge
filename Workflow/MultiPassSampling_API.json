@@ -88,7 +88,7 @@
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 7420489756954,
+      "noise_seed": 173407566755529,
       "cfg": 7,
       "model": [
         "7",
@@ -180,7 +180,7 @@
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 77383915073527,
+      "noise_seed": 95099951283096,
       "cfg": 5,
       "model": [
         "32",
@@ -294,7 +294,7 @@
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1037604105875951,
+      "noise_seed": 1069930693430089,
       "cfg": 3,
       "model": [
         "54",
@@ -433,7 +433,7 @@
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1109790844095338,
+      "noise_seed": 842504059028136,
       "cfg": 3,
       "model": [
         "67",
@@ -553,7 +553,7 @@
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 959284084180872,
+      "noise_seed": 346794832178234,
       "cfg": 3,
       "model": [
         "101",
@@ -647,10 +647,10 @@
   "101": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.7000000000000001,
+      "strength": 0.85,
       "steps": 36,
-      "start_percent": 15,
-      "end_percent": 90,
+      "start_percent": 0,
+      "end_percent": 80,
       "model": [
         "82",
         0
@@ -712,7 +712,7 @@
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 1111868531451977,
+      "noise_seed": 79419633471033,
       "cfg": 3,
       "model": [
         "137",
@@ -783,7 +783,7 @@
     "inputs": {
       "scheduler": "simple",
       "steps": 36,
-      "denoise": 0.5,
+      "denoise": 0.2,
       "model": [
         "137",
         0
@@ -806,10 +806,10 @@
   "137": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.85,
+      "strength": 1,
       "steps": 36,
       "start_percent": 0,
-      "end_percent": 80,
+      "end_percent": 100,
       "model": [
         "133",
         0

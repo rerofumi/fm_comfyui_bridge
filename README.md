@@ -126,7 +126,7 @@ save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
 
 ## 変更履歴
 
-### バージョン 0.6.2
+### バージョン 0.6.4
 
 - bugfix
 

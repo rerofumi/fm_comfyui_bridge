@@ -88,7 +88,7 @@
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 331791514998466,
+      "noise_seed": 942231486746652,
       "cfg": 7,
       "model": [
         "7",
@@ -180,7 +180,7 @@
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 641945219174512,
+      "noise_seed": 6078924935363,
       "cfg": 5,
       "model": [
         "32",
@@ -294,7 +294,7 @@
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 737314571388662,
+      "noise_seed": 511133294639095,
       "cfg": 3,
       "model": [
         "54",
@@ -433,7 +433,7 @@
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 920085492297380,
+      "noise_seed": 955774721657174,
       "cfg": 3,
       "model": [
         "67",
@@ -553,7 +553,7 @@
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 827367939187955,
+      "noise_seed": 229634304802029,
       "cfg": 3,
       "model": [
         "101",
@@ -788,7 +788,7 @@
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 599487029160006,
+      "noise_seed": 54659552276610,
       "cfg": 3,
       "model": [
         "137",
@@ -859,7 +859,7 @@
     "inputs": {
       "scheduler": "simple",
       "steps": 36,
-      "denoise": 0.5,
+      "denoise": 0.2,
       "model": [
         "137",
         0
@@ -882,10 +882,10 @@
   "137": {
     "inputs": {
       "model_name": "bdsqlsz_controlllite_xl_tile_anime_beta.safetensors",
-      "strength": 0.85,
+      "strength": 1,
       "steps": 36,
       "start_percent": 0,
-      "end_percent": 80,
+      "end_percent": 100,
       "model": [
         "133",
         0
