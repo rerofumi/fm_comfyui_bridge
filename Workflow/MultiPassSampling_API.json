@@ -88,7 +88,7 @@
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 199339536225634,
+      "noise_seed": 7420489756954,
       "cfg": 7,
       "model": [
         "7",
@@ -180,7 +180,7 @@
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 514713864627679,
+      "noise_seed": 77383915073527,
       "cfg": 5,
       "model": [
         "32",
@@ -294,7 +294,7 @@
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 847744170770005,
+      "noise_seed": 1037604105875951,
       "cfg": 3,
       "model": [
         "54",
@@ -433,7 +433,7 @@
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 752873862696218,
+      "noise_seed": 1109790844095338,
       "cfg": 3,
       "model": [
         "67",
@@ -553,7 +553,7 @@
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 697536245458271,
+      "noise_seed": 959284084180872,
       "cfg": 3,
       "model": [
         "101",
@@ -576,7 +576,7 @@
         0
       ],
       "latent_image": [
-        "90",
+        "173",
         0
       ]
     },
@@ -598,20 +598,6 @@
     "class_type": "BasicScheduler",
     "_meta": {
       "title": "BasicScheduler"
-    }
-  },
-  "90": {
-    "inputs": {
-      "upscale_method": "bicubic",
-      "scale_by": 1.5,
-      "samples": [
-        "69",
-        0
-      ]
-    },
-    "class_type": "LatentUpscaleBy",
-    "_meta": {
-      "title": "Upscale Latent By"
     }
   },
   "93": {
@@ -645,7 +631,7 @@
   "99": {
     "inputs": {
       "samples": [
-        "90",
+        "173",
         0
       ],
       "vae": [
@@ -681,7 +667,7 @@
   },
   "111": {
     "inputs": {
-      "filename_prefix": "2025-01-02/HighRes",
+      "filename_prefix": "2025-01-04/HighRes",
       "images": [
         "148",
         0
@@ -726,7 +712,7 @@
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 736940489346642,
+      "noise_seed": 1111868531451977,
       "cfg": 3,
       "model": [
         "137",
@@ -749,7 +735,7 @@
         0
       ],
       "latent_image": [
-        "139",
+        "177",
         0
       ]
     },
@@ -780,7 +766,7 @@
   "134": {
     "inputs": {
       "samples": [
-        "139",
+        "177",
         0
       ],
       "vae": [
@@ -850,28 +836,6 @@
     "class_type": "ModelSamplingDiscrete",
     "_meta": {
       "title": "ModelSamplingDiscrete"
-    }
-  },
-  "139": {
-    "inputs": {
-      "upscale_method": "bicubic",
-      "width": [
-        "142",
-        0
-      ],
-      "height": [
-        "147",
-        0
-      ],
-      "crop": "disabled",
-      "samples": [
-        "84",
-        0
-      ]
-    },
-    "class_type": "LatentUpscale",
-    "_meta": {
-      "title": "Upscale Latent"
     }
   },
   "142": {
@@ -1165,6 +1129,140 @@
     "class_type": "EmptyLatentImage",
     "_meta": {
       "title": "Empty Latent Image"
+    }
+  },
+  "167": {
+    "inputs": {
+      "samples": [
+        "69",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "168": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": [
+        "169",
+        0
+      ],
+      "height": [
+        "170",
+        0
+      ],
+      "crop": "disabled",
+      "image": [
+        "167",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "Upscale Image"
+    }
+  },
+  "169": {
+    "inputs": {
+      "integer": [
+        "164",
+        1
+      ],
+      "multiple": 1.5
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "170": {
+    "inputs": {
+      "integer": [
+        "165",
+        1
+      ],
+      "multiple": 1.5
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "173": {
+    "inputs": {
+      "pixels": [
+        "168",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "175": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": [
+        "142",
+        0
+      ],
+      "height": [
+        "147",
+        0
+      ],
+      "crop": "disabled",
+      "image": [
+        "176",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "Upscale Image"
+    }
+  },
+  "176": {
+    "inputs": {
+      "samples": [
+        "84",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "177": {
+    "inputs": {
+      "pixels": [
+        "175",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
     }
   }
 }

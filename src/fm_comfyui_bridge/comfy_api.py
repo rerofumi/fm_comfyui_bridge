@@ -270,7 +270,7 @@ HIGHRES_WORKFLOW = """
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 199339536225634,
+      "noise_seed": 7420489756954,
       "cfg": 7,
       "model": [
         "7",
@@ -362,7 +362,7 @@ HIGHRES_WORKFLOW = """
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 514713864627679,
+      "noise_seed": 77383915073527,
       "cfg": 5,
       "model": [
         "32",
@@ -476,7 +476,7 @@ HIGHRES_WORKFLOW = """
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 847744170770005,
+      "noise_seed": 1037604105875951,
       "cfg": 3,
       "model": [
         "54",
@@ -615,7 +615,7 @@ HIGHRES_WORKFLOW = """
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 752873862696218,
+      "noise_seed": 1109790844095338,
       "cfg": 3,
       "model": [
         "67",
@@ -735,7 +735,7 @@ HIGHRES_WORKFLOW = """
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 697536245458271,
+      "noise_seed": 959284084180872,
       "cfg": 3,
       "model": [
         "101",
@@ -758,7 +758,7 @@ HIGHRES_WORKFLOW = """
         0
       ],
       "latent_image": [
-        "90",
+        "173",
         0
       ]
     },
@@ -780,20 +780,6 @@ HIGHRES_WORKFLOW = """
     "class_type": "BasicScheduler",
     "_meta": {
       "title": "BasicScheduler"
-    }
-  },
-  "90": {
-    "inputs": {
-      "upscale_method": "bicubic",
-      "scale_by": 1.5,
-      "samples": [
-        "69",
-        0
-      ]
-    },
-    "class_type": "LatentUpscaleBy",
-    "_meta": {
-      "title": "Upscale Latent By"
     }
   },
   "93": {
@@ -827,7 +813,7 @@ HIGHRES_WORKFLOW = """
   "99": {
     "inputs": {
       "samples": [
-        "90",
+        "173",
         0
       ],
       "vae": [
@@ -863,7 +849,7 @@ HIGHRES_WORKFLOW = """
   },
   "111": {
     "inputs": {
-      "filename_prefix": "2025-01-02/HighRes",
+      "filename_prefix": "2025-01-04/HighRes",
       "images": [
         "148",
         0
@@ -908,7 +894,7 @@ HIGHRES_WORKFLOW = """
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 736940489346642,
+      "noise_seed": 1111868531451977,
       "cfg": 3,
       "model": [
         "137",
@@ -931,7 +917,7 @@ HIGHRES_WORKFLOW = """
         0
       ],
       "latent_image": [
-        "139",
+        "177",
         0
       ]
     },
@@ -962,7 +948,7 @@ HIGHRES_WORKFLOW = """
   "134": {
     "inputs": {
       "samples": [
-        "139",
+        "177",
         0
       ],
       "vae": [
@@ -1032,28 +1018,6 @@ HIGHRES_WORKFLOW = """
     "class_type": "ModelSamplingDiscrete",
     "_meta": {
       "title": "ModelSamplingDiscrete"
-    }
-  },
-  "139": {
-    "inputs": {
-      "upscale_method": "bicubic",
-      "width": [
-        "142",
-        0
-      ],
-      "height": [
-        "147",
-        0
-      ],
-      "crop": "disabled",
-      "samples": [
-        "84",
-        0
-      ]
-    },
-    "class_type": "LatentUpscale",
-    "_meta": {
-      "title": "Upscale Latent"
     }
   },
   "142": {
@@ -1348,6 +1312,140 @@ HIGHRES_WORKFLOW = """
     "_meta": {
       "title": "Empty Latent Image"
     }
+  },
+  "167": {
+    "inputs": {
+      "samples": [
+        "69",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "168": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": [
+        "169",
+        0
+      ],
+      "height": [
+        "170",
+        0
+      ],
+      "crop": "disabled",
+      "image": [
+        "167",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "Upscale Image"
+    }
+  },
+  "169": {
+    "inputs": {
+      "integer": [
+        "164",
+        1
+      ],
+      "multiple": 1.5
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "170": {
+    "inputs": {
+      "integer": [
+        "165",
+        1
+      ],
+      "multiple": 1.5
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "173": {
+    "inputs": {
+      "pixels": [
+        "168",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "175": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": [
+        "142",
+        0
+      ],
+      "height": [
+        "147",
+        0
+      ],
+      "crop": "disabled",
+      "image": [
+        "176",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "Upscale Image"
+    }
+  },
+  "176": {
+    "inputs": {
+      "samples": [
+        "84",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "177": {
+    "inputs": {
+      "pixels": [
+        "175",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
   }
 }
 """
@@ -1443,7 +1541,7 @@ HIGHRES_I2I_WORKFLOW = """
   "20": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 749615918710708,
+      "noise_seed": 331791514998466,
       "cfg": 7,
       "model": [
         "7",
@@ -1535,7 +1633,7 @@ HIGHRES_I2I_WORKFLOW = """
   "37": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 947114705502369,
+      "noise_seed": 641945219174512,
       "cfg": 5,
       "model": [
         "32",
@@ -1649,7 +1747,7 @@ HIGHRES_I2I_WORKFLOW = """
   "53": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 500222440335064,
+      "noise_seed": 737314571388662,
       "cfg": 3,
       "model": [
         "54",
@@ -1788,7 +1886,7 @@ HIGHRES_I2I_WORKFLOW = """
   "69": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 321317881108140,
+      "noise_seed": 920085492297380,
       "cfg": 3,
       "model": [
         "67",
@@ -1908,7 +2006,7 @@ HIGHRES_I2I_WORKFLOW = """
   "84": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 249648287766607,
+      "noise_seed": 827367939187955,
       "cfg": 3,
       "model": [
         "101",
@@ -1931,7 +2029,7 @@ HIGHRES_I2I_WORKFLOW = """
         0
       ],
       "latent_image": [
-        "90",
+        "172",
         0
       ]
     },
@@ -1953,20 +2051,6 @@ HIGHRES_I2I_WORKFLOW = """
     "class_type": "BasicScheduler",
     "_meta": {
       "title": "BasicScheduler"
-    }
-  },
-  "90": {
-    "inputs": {
-      "upscale_method": "bicubic",
-      "scale_by": 1.5,
-      "samples": [
-        "69",
-        0
-      ]
-    },
-    "class_type": "LatentUpscaleBy",
-    "_meta": {
-      "title": "Upscale Latent By"
     }
   },
   "93": {
@@ -2000,7 +2084,7 @@ HIGHRES_I2I_WORKFLOW = """
   "99": {
     "inputs": {
       "samples": [
-        "90",
+        "172",
         0
       ],
       "vae": [
@@ -2036,7 +2120,7 @@ HIGHRES_I2I_WORKFLOW = """
   },
   "111": {
     "inputs": {
-      "filename_prefix": "2025-01-02/HighRes",
+      "filename_prefix": "2025-01-04/HighRes",
       "images": [
         "148",
         0
@@ -2157,7 +2241,7 @@ HIGHRES_I2I_WORKFLOW = """
   "128": {
     "inputs": {
       "add_noise": true,
-      "noise_seed": 779223433364398,
+      "noise_seed": 599487029160006,
       "cfg": 3,
       "model": [
         "137",
@@ -2180,7 +2264,7 @@ HIGHRES_I2I_WORKFLOW = """
         0
       ],
       "latent_image": [
-        "139",
+        "177",
         0
       ]
     },
@@ -2211,7 +2295,7 @@ HIGHRES_I2I_WORKFLOW = """
   "134": {
     "inputs": {
       "samples": [
-        "139",
+        "177",
         0
       ],
       "vae": [
@@ -2281,28 +2365,6 @@ HIGHRES_I2I_WORKFLOW = """
     "class_type": "ModelSamplingDiscrete",
     "_meta": {
       "title": "ModelSamplingDiscrete"
-    }
-  },
-  "139": {
-    "inputs": {
-      "upscale_method": "bislerp",
-      "width": [
-        "142",
-        0
-      ],
-      "height": [
-        "147",
-        0
-      ],
-      "crop": "disabled",
-      "samples": [
-        "84",
-        0
-      ]
-    },
-    "class_type": "LatentUpscale",
-    "_meta": {
-      "title": "Upscale Latent"
     }
   },
   "142": {
@@ -2579,6 +2641,140 @@ HIGHRES_I2I_WORKFLOW = """
     "class_type": "CR Value",
     "_meta": {
       "title": "BaseSize-Height"
+    }
+  },
+  "168": {
+    "inputs": {
+      "integer": [
+        "164",
+        1
+      ],
+      "multiple": 1.5
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "169": {
+    "inputs": {
+      "integer": [
+        "165",
+        1
+      ],
+      "multiple": 1.5
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "170": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": [
+        "168",
+        0
+      ],
+      "height": [
+        "169",
+        0
+      ],
+      "crop": "disabled",
+      "image": [
+        "171",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "Upscale Image"
+    }
+  },
+  "171": {
+    "inputs": {
+      "samples": [
+        "69",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "172": {
+    "inputs": {
+      "pixels": [
+        "170",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "175": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "width": [
+        "142",
+        0
+      ],
+      "height": [
+        "147",
+        0
+      ],
+      "crop": "disabled",
+      "image": [
+        "176",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "Upscale Image"
+    }
+  },
+  "176": {
+    "inputs": {
+      "samples": [
+        "84",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "177": {
+    "inputs": {
+      "pixels": [
+        "175",
+        0
+      ],
+      "vae": [
+        "5",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
     }
   }
 }
