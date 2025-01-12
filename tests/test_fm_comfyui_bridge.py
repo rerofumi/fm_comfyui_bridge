@@ -10,14 +10,17 @@ from fm_comfyui_bridge.bridge import (
 from fm_comfyui_bridge.comfy_api import NEGATIVE
 from fm_comfyui_bridge.lora_yaml import SdLoraYaml
 
+SERVER_URL = None
+
 
 def test_bridge_functionality():
     lora = SdLoraYaml()
     lora.read_from_yaml("./tests/lora.yaml")
-    img = generate("1girl", NEGATIVE, lora, lora.image_size)
+    img = generate("1girl", NEGATIVE, lora, lora.image_size, server_url=SERVER_URL)
+    assert img is not None, "画像生成に失敗しました。"
     path = save_image(img, posi="1girl", nega=NEGATIVE, workspace="./tests")
     assert os.path.exists(path), f"ファイルが存在しません: {path}"
-    send_image(path, upload_name="bridge_test.png")
+    send_image(path, upload_name="bridge_test.png", server_url=SERVER_URL)
     if os.path.exists(path):
         os.remove(path)  # yaml書き込み後、ファイル削除
         os.rmdir("./tests/outputs")
@@ -26,10 +29,12 @@ def test_bridge_functionality():
 def test_bridge_highreso_functionality():
     lora = SdLoraYaml()
     lora.read_from_yaml("./tests/lora.yaml")
-    img = generate_highreso("1girl", NEGATIVE, lora, lora.image_size)
+    img = generate_highreso(
+        "1girl", NEGATIVE, lora, lora.image_size, server_url=SERVER_URL
+    )
     path = save_image(img, posi="1girl", nega=NEGATIVE, workspace="./tests")
     assert os.path.exists(path), f"ファイルが存在しません: {path}"
-    send_image(path, upload_name="bridge_test.png")
+    send_image(path, upload_name="bridge_test.png", server_url=SERVER_URL)
     if os.path.exists(path):
         os.remove(path)  # yaml書き込み後、ファイル削除
         os.rmdir("./tests/outputs")
@@ -59,11 +64,13 @@ def test_lora_yaml_functionality():
 def test_bridge_i2i_highreso():
     lora = SdLoraYaml()
     lora.read_from_yaml("./tests/lora.yaml")
-    img = generate("1girl", NEGATIVE, lora, lora.image_size)
+    img = generate("1girl", NEGATIVE, lora, lora.image_size, server_url=SERVER_URL)
     path1 = save_image(img, posi="1girl", nega=NEGATIVE, workspace="./tests")
     assert os.path.exists(path1), f"ファイルが存在しません: {path1}"
     #
-    img = generate_i2i_highreso("1girl", NEGATIVE, lora, lora.image_size, path1)
+    img = generate_i2i_highreso(
+        "1girl", NEGATIVE, lora, lora.image_size, path1, server_url=SERVER_URL
+    )
     path2 = save_image(img, posi="1girl", nega=NEGATIVE, workspace="./tests")
     #
     if os.path.exists(path1):

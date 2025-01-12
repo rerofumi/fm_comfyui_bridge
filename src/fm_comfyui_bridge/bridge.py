@@ -1,4 +1,5 @@
 import datetime
+import importlib.resources
 import io
 import json
 import os
@@ -8,7 +9,6 @@ import time
 import requests
 from PIL import Image, PngImagePlugin
 
-import fm_comfyui_bridge.comfy_api as comfy_api
 import fm_comfyui_bridge.config as config
 from fm_comfyui_bridge.lora_yaml import SdLoraYaml
 
@@ -135,13 +135,15 @@ def get_input_image_name():
 
 
 def t2i_request_build(
-    workflow: str,
     prompt: str,
     negative: str,
     lora: SdLoraYaml,
     image_size: tuple[int, int],
 ) -> any:
-    prompt_path = json.loads(workflow)
+    with importlib.resources.open_text(
+        "fm_comfyui_bridge.Workflow", "SDXL_LoRA_Base_API.json"
+    ) as f:
+        prompt_path = json.load(f)
     # パラメータ埋め込み(workflowによって異なる処理)
     prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
     prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
@@ -177,13 +179,15 @@ def t2i_request_build(
 
 
 def t2i_highreso_request_build(
-    workflow: str,
     prompt: str,
     negative: str,
     lora: SdLoraYaml,
     image_size: tuple[int, int],
 ) -> any:
-    prompt_path = json.loads(workflow)
+    with importlib.resources.open_text(
+        "fm_comfyui_bridge.Workflow", "MultiPassSampling_API.json"
+    ) as f:
+        prompt_path = json.load(f)
     # パラメータ埋め込み(workflowによって異なる処理)
     prompt_path[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
         lora.checkpoint
@@ -217,34 +221,91 @@ def t2i_highreso_request_build(
     return prompt_path
 
 
+def i2i_highreso_request_build(
+    prompt: str,
+    negative: str,
+    lora: SdLoraYaml,
+    upload_image: str,
+    image_size: tuple[int, int],
+) -> any:
+    with importlib.resources.open_text(
+        "fm_comfyui_bridge.Workflow", "MultiPassSampling_I2I_API.json"
+    ) as f:
+        prompt_path = json.load(f)
+    # パラメータ埋め込み(workflowによって異なる処理)
+    prompt_path[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
+        lora.checkpoint
+    )
+    prompt_path[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
+    prompt_path[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
+    for node in config.COMFYUI_NODE_HR_SEED:
+        prompt_path[node]["inputs"]["noise_seed"] = random.randint(1, 10000000000)
+    prompt_path[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
+    prompt_path[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
+    for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
+        prompt_path[node[0]]["inputs"]["lora_name"] = lora.model
+        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength * node[1]
+        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength * node[1]
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    prompt_path[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
+        f"{current_date}/Bridge"
+    )
+    # upload image
+    prompt_path[config.COMFYUI_NODE_HR_LOAD_IMAGE]["inputs"]["image"] = upload_image
+    # lora, prediction
+    if not lora.lora_enabled:
+        for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
+            prompt_path[node[0]]["inputs"]["strength_model"] = 0
+            prompt_path[node[0]]["inputs"]["strength_clip"] = 0
+    if lora.vpred:
+        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
+            prompt_path[node]["inputs"]["sampling"] = "v_prediction"
+    else:
+        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
+            prompt_path[node]["inputs"]["sampling"] = "eps"
+
+    return prompt_path
+
+
 #
 # convenience methods
 #
 def generate(
-    prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
+    prompt: str,
+    negative: str,
+    lora: SdLoraYaml,
+    image_size: tuple[int, int],
+    server_url: str = None,
 ) -> Image:
     id = None
     id = send_request(
-        t2i_request_build(comfy_api.NORMAL_WORKFLOW, prompt, negative, lora, image_size)
+        t2i_request_build(prompt, negative, lora, image_size), server_url=server_url
     )
     if id:
-        await_request(1, 3)
-        return get_image(id, output_node=config.COMFYUI_NODE_OUTPUT)
+        await_request(1, 3, server_url=server_url)
+        return get_image(
+            id, output_node=config.COMFYUI_NODE_OUTPUT, server_url=server_url
+        )
     return None
 
 
 def generate_highreso(
-    prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]
+    prompt: str,
+    negative: str,
+    lora: SdLoraYaml,
+    image_size: tuple[int, int],
+    server_url: str = None,
 ) -> Image:
     id = None
     id = send_request(
-        t2i_highreso_request_build(
-            comfy_api.HIGHRES_WORKFLOW, prompt, negative, lora, image_size
-        )
+        t2i_highreso_request_build(prompt, negative, lora, image_size),
+        server_url=server_url,
     )
     if id:
-        await_request(1, 3)
-        return get_image(id, output_node=config.COMFYUI_NODE_HR_OUTPUT)
+        await_request(1, 3, server_url=server_url)
+        return get_image(
+            id, output_node=config.COMFYUI_NODE_HR_OUTPUT, server_url=server_url
+        )
     return None
 
 
@@ -254,18 +315,21 @@ def generate_i2i_highreso(
     lora: SdLoraYaml,
     image_size: tuple[int, int],
     input_image_filepath: str,
+    server_url: str = None,
 ) -> Image:
     # input image upload
     upload_image = get_input_image_name()
-    send_image(input_image_filepath, upload_name=upload_image)
-    prompt = t2i_highreso_request_build(
-        comfy_api.HIGHRES_I2I_WORKFLOW, prompt, negative, lora, image_size
+    send_image(input_image_filepath, upload_name=upload_image, server_url=server_url)
+
+    prompt = i2i_highreso_request_build(
+        prompt, negative, lora, upload_image, image_size
     )
-    prompt[config.COMFYUI_NODE_HR_LOAD_IMAGE]["inputs"]["image"] = upload_image
     #
     id = None
-    id = send_request(prompt)
+    id = send_request(prompt, server_url=server_url)
     if id:
-        await_request(1, 3)
-        return get_image(id, output_node=config.COMFYUI_NODE_HR_OUTPUT)
+        await_request(1, 3, server_url=server_url)
+        return get_image(
+            id, output_node=config.COMFYUI_NODE_HR_OUTPUT, server_url=server_url
+        )
     return None
