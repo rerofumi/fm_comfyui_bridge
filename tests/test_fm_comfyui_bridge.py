@@ -1,9 +1,11 @@
 import os
 
 from fm_comfyui_bridge.bridge import (
+    free,
     generate,
     generate_highreso,
     generate_i2i_highreso,
+    list_models,
     save_image,
     send_image,
 )
@@ -78,3 +80,21 @@ def test_bridge_i2i_highreso():
     if os.path.exists(path2):
         os.remove(path2)
         os.rmdir("./tests/outputs")
+
+
+def test_bridge_free():
+    response = free(server_url=SERVER_URL)
+    assert (
+        response.status_code == 200
+    ), f"ステータスコードが不正です: {response.status_code}"
+
+
+def test_bridge_list_models():
+    folder = "checkpoints"
+    response = list_models(folder, server_url=SERVER_URL)
+    assert isinstance(response, list), f"レスポンスがリストではありません: {response}"
+    assert len(response) > 0, f"モデルリストが空です: {response}"
+    folder = "loras"
+    response = list_models(folder, server_url=SERVER_URL)
+    assert isinstance(response, list), f"レスポンスがリストではありません: {response}"
+    assert len(response) > 0, f"モデルリストが空です: {response}"

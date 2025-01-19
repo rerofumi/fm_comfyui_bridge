@@ -93,6 +93,23 @@ def send_image(filename, upload_name=None, server_url: str = None):
     return response
 
 
+def free(server_url: str = None):
+    url = server_url if server_url else config.COMFYUI_URL
+    data = {
+        "unload_models": True,
+        "free_memory": True,
+    }
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(f"{url}free", headers=headers, json=data)
+    return response
+
+
+def list_models(folder: str, server_url: str = None):
+    url = server_url if server_url else config.COMFYUI_URL
+    response = requests.get(f"{url}models/{folder}")
+    return json.loads(response.text)
+
+
 #
 # Image works
 #

@@ -70,7 +70,6 @@ sample = api.generate_highreso(prompt="1girl", negative="low quality", lora=lora
 sample = api.generate_i2i_highreso(prompt="1girl", negative="low quality", lora=lora_yaml_instance, image_size=(1024, 1024), "C:/input_image.png")
 ```
 
-
 #### `save_image(image, posi=None, nega=None, filename=None, workspace=None, output_dir=None)`
 
 PIL 形式の画像を保存します。
@@ -82,9 +81,24 @@ post, nega はテキストプロンプトを png の meta 情報として記録�
 workspace 未指定時の値はカレントディレクトリ、output_dir 未指定時の値は `outputs` です。
 
 ```
-save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
+api.save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
 ```
 
+#### `free(server_url: str = None)`
+
+モデルをアンロードし、メモリを解放します。
+
+```
+api.free()
+```
+
+#### `list_models(folder: str, server_url: str = None)`
+
+指定されたフォルダ内のモデルのリストを取得します。
+
+```
+models = api.list_models(folder="checkpoints")
+```
 
 ### SdLoraYaml クラス
 
@@ -125,6 +139,10 @@ save_image(sample, posi="1girl", nega="low quality", filename="sample.png")
   - `trigger`: LoRAのトリガーワードを指定します。
 
 ## 変更履歴
+
+### バージョン 0.7.0
+
+- free, list_models といった制御 API を追加
 
 ### バージョン 0.6.4
 
