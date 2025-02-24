@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.10"
 
 [[package]]
@@ -99,7 +100,7 @@ wheels = [
 
 [[package]]
 name = "fm-comfyui-bridge"
-version = "0.6.4"
+version = "0.8.0"
 source = { editable = "." }
 dependencies = [
     { name = "pillow" },

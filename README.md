@@ -137,8 +137,15 @@ models = api.list_models(folder="checkpoints")
   - `enabled`: LoRAモデルの使用を有効または無効にします。
   - `strength`: LoRAの強度を指定します。
   - `trigger`: LoRAのトリガーワードを指定します。
+- `sampling`: サンプリングパラメータを指定します。省略可。
+  - `steps`: サンプリング数の指定
+  - `cfg`: CGFスケール値の指定
 
 ## 変更履歴
+
+### バージョン 0.8.0
+
+- lora.yaml でサンプリングパラメータを指定できるようにした
 
 ### バージョン 0.7.0
 

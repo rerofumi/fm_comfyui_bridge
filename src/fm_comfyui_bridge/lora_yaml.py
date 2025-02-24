@@ -73,3 +73,19 @@ class SdLoraYaml:
         else:
             self.data["vpred"] = False  # Set default value to False if not present
             return False
+
+    @property
+    def steps(self) -> int:
+        """Sampling steps"""
+        if "sampling" in self.data and "steps" in self.data["sampling"]:
+            return self.data["sampling"]["steps"]
+        else:
+            return None
+
+    @property
+    def cfg(self) -> float:
+        """CFG scale"""
+        if "sampling" in self.data and "cfg" in self.data["sampling"]:
+            return self.data["sampling"]["cfg"]
+        else:
+            return None

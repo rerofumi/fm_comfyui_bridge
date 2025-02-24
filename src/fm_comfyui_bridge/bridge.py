@@ -191,7 +191,10 @@ def t2i_request_build(
         )
     else:
         prompt_path[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = "eps"
-
+    if lora.steps is not None:
+        prompt_path[config.COMFYUI_NODE_SAMPLING_STEPS]["inputs"]["steps"] = lora.steps
+    if lora.cfg is not None:
+        prompt_path[config.COMFYUI_NODE_SAMPLING_CFG]["inputs"]["cfg"] = lora.cfg
     return prompt_path
 
 

@@ -8,3 +8,6 @@ lora:
   model: lora-ix-tillhi-v1.safetensors
   strength: 0.9
   trigger: tillhi
+sampling:
+  steps: 12
+  cfg: 5.0
