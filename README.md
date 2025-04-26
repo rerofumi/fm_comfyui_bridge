@@ -28,7 +28,7 @@ positive_prompt(text), negative_prompt(text), 出力モデル等の設定(SdLora
 
 ローカル環境に ComfyUI のインストール、セットアップを行い動作している事を確認してください。
 
-カスタムノードを使用しています。workflow ディレクトリにある `_api` が『付いていない』ワークフローを ComfyUI に読みこませて、全ノード問題なく動作することを確認してください。
+カスタムノードを使用しています。workflow ディレクトリにある `_API` が『付いていない』ワークフローを ComfyUI に読みこませて、全ノード問題なく動作することを確認してください。
 
 以下のカスタムノードを使っています(できるだけ挙げましたが抜け漏れがあるかもしれません)
 
@@ -43,6 +43,7 @@ positive_prompt(text), negative_prompt(text), 出力モデル等の設定(SdLora
 
 指定されたプロンプトとパラメータを使用して画像を生成します。
 ComfyUI のタスクキューが空になるまで待ちますので、他のタスク実行中だとなかなか戻ってこない事になります。
+詳細はワークフローファイル `SDXL_LoRA_Base.json` を参照してください。
 
 戻り値は PIL 形式のイメージです。
 
@@ -53,7 +54,7 @@ sample = api.generate(prompt="1girl", negative="low quality", lora=lora_yaml_ins
 #### `generate_highreso(prompt: str, negative: str, lora: SdLoraYaml, image_size: tuple[int, int]) -> Image`
 
 マルチパスサンプリング＆アップスケールを使用します。時間はかかりますがちょっときれいな出力が得られます。
-詳細はワークフローファイル `MultiPassSampling.json` を参照してください。
+詳細はワークフローファイル `SDXL_HighReso.json` を参照してください。
 
 ```
 sample = api.generate_highreso(prompt="1girl", negative="low quality", lora=lora_yaml_instance, image_size=(1024, 1024))
@@ -64,7 +65,7 @@ sample = api.generate_highreso(prompt="1girl", negative="low quality", lora=lora
 マルチパスサンプリング＆アップスケールを使用した Image2Image を行います。
 入力画像ファイルのパスを追加で与えてください。
 入力画像はラフスケッチ程度に扱われプロンプトのほうが支配的です。
-詳細はワークフローファイル `MultiPassSampling_i2i.json` を参照してください。
+詳細はワークフローファイル `SDXL_HighReso_i2i.json` を参照してください。
 
 ```
 sample = api.generate_i2i_highreso(prompt="1girl", negative="low quality", lora=lora_yaml_instance, image_size=(1024, 1024), "C:/input_image.png")
@@ -142,6 +143,10 @@ models = api.list_models(folder="checkpoints")
   - `cfg`: CGFスケール値の指定
 
 ## 変更履歴
+
+### バージョン 0.8.2
+
+- HighReso モードを改定、計算量を減らし元の絵を残すワークフローに変更
 
 ### バージョン 0.8.0
 
