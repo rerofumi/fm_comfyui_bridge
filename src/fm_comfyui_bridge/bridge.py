@@ -205,7 +205,7 @@ def t2i_highreso_request_build(
     image_size: tuple[int, int],
 ) -> any:
     with importlib.resources.open_text(
-        "fm_comfyui_bridge.Workflow", "MultiPassSampling_API.json"
+        "fm_comfyui_bridge.Workflow", "SDXL_HighReso_API.json"
     ) as f:
         prompt_path = json.load(f)
     # パラメータ埋め込み(workflowによって異なる処理)
@@ -220,8 +220,8 @@ def t2i_highreso_request_build(
     prompt_path[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
     for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
         prompt_path[node[0]]["inputs"]["lora_name"] = lora.model
-        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength * node[1]
-        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength * node[1]
+        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength
+        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
     prompt_path[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
         f"{current_date}/Bridge"
@@ -249,7 +249,7 @@ def i2i_highreso_request_build(
     image_size: tuple[int, int],
 ) -> any:
     with importlib.resources.open_text(
-        "fm_comfyui_bridge.Workflow", "MultiPassSampling_I2I_API.json"
+        "fm_comfyui_bridge.Workflow", "SDXL_HighReso_I2I_API.json"
     ) as f:
         prompt_path = json.load(f)
     # パラメータ埋め込み(workflowによって異なる処理)
@@ -260,12 +260,10 @@ def i2i_highreso_request_build(
     prompt_path[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
     for node in config.COMFYUI_NODE_HR_SEED:
         prompt_path[node]["inputs"]["noise_seed"] = random.randint(1, 10000000000)
-    prompt_path[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
-    prompt_path[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
     for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
         prompt_path[node[0]]["inputs"]["lora_name"] = lora.model
-        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength * node[1]
-        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength * node[1]
+        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength
+        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
     prompt_path[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
         f"{current_date}/Bridge"

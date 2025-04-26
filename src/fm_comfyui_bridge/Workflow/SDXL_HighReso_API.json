@@ -1,0 +1,346 @@
+{
+  "1": {
+    "inputs": {
+      "ckpt_name": "catCarrier_v30.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "4": {
+    "inputs": {
+      "text": "kmd_rusk, masterpiece, best quality, newest, tareme, 1girl,  shortcut_hair\n"
+    },
+    "class_type": "CR Text",
+    "_meta": {
+      "title": "🔤 CR Text"
+    }
+  },
+  "6": {
+    "inputs": {
+      "text": "worst quality, bad quality, low quality, lowres, scan artifacts, jpeg artifacts, sketch, light particles, jpeg artifacts, unfinished, oldest, old, abstract, signature, star eyes,"
+    },
+    "class_type": "CR Text",
+    "_meta": {
+      "title": "🔤 CR Text"
+    }
+  },
+  "7": {
+    "inputs": {
+      "seed": 947298016065601,
+      "steps": 24,
+      "cfg": 4,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.9500000000000002,
+      "model": [
+        "22",
+        0
+      ],
+      "positive": [
+        "19",
+        0
+      ],
+      "negative": [
+        "20",
+        0
+      ],
+      "latent_image": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "11": {
+    "inputs": {
+      "samples": [
+        "7",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "14": {
+    "inputs": {
+      "lora_name": "add-detail-xl.safetensors",
+      "strength_model": 1.0000000000000002,
+      "strength_clip": 1.0000000000000002,
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "19": {
+    "inputs": {
+      "width": [
+        "33",
+        0
+      ],
+      "height": [
+        "34",
+        0
+      ],
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": [
+        "33",
+        0
+      ],
+      "target_height": [
+        "34",
+        0
+      ],
+      "text_g": [
+        "4",
+        0
+      ],
+      "text_l": [
+        "4",
+        0
+      ],
+      "clip": [
+        "14",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeSDXL",
+    "_meta": {
+      "title": "CLIPTextEncodeSDXL"
+    }
+  },
+  "20": {
+    "inputs": {
+      "width": [
+        "33",
+        0
+      ],
+      "height": [
+        "34",
+        0
+      ],
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": [
+        "33",
+        0
+      ],
+      "target_height": [
+        "34",
+        0
+      ],
+      "text_g": [
+        "6",
+        0
+      ],
+      "text_l": [
+        "6",
+        0
+      ],
+      "clip": [
+        "14",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeSDXL",
+    "_meta": {
+      "title": "CLIPTextEncodeSDXL"
+    }
+  },
+  "21": {
+    "inputs": {
+      "filename_prefix": "2025-04-26/Bridge",
+      "images": [
+        "38",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "22": {
+    "inputs": {
+      "sampling": "eps",
+      "zsnr": false,
+      "model": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingDiscrete",
+    "_meta": {
+      "title": "ModelSamplingDiscrete"
+    }
+  },
+  "30": {
+    "inputs": {
+      "value": 1024
+    },
+    "class_type": "CR Value",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "31": {
+    "inputs": {
+      "width": [
+        "30",
+        1
+      ],
+      "height": [
+        "32",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "32": {
+    "inputs": {
+      "value": 1024
+    },
+    "class_type": "CR Value",
+    "_meta": {
+      "title": "Hight"
+    }
+  },
+  "33": {
+    "inputs": {
+      "integer": [
+        "30",
+        1
+      ],
+      "multiple": 4
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "34": {
+    "inputs": {
+      "integer": [
+        "32",
+        1
+      ],
+      "multiple": 4
+    },
+    "class_type": "CR Integer Multiple",
+    "_meta": {
+      "title": "⚙️ CR Integer Multiple"
+    }
+  },
+  "36": {
+    "inputs": {
+      "pixels": [
+        "41",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "37": {
+    "inputs": {
+      "seed": 585209864429731,
+      "steps": 38,
+      "cfg": 6.5,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 0.6000000000000001,
+      "model": [
+        "22",
+        0
+      ],
+      "positive": [
+        "19",
+        0
+      ],
+      "negative": [
+        "20",
+        0
+      ],
+      "latent_image": [
+        "36",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "38": {
+    "inputs": {
+      "samples": [
+        "37",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "40": {
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "41": {
+    "inputs": {
+      "upscale_method": "lanczos",
+      "scale_by": 2.0000000000000004,
+      "image": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "ImageScaleBy",
+    "_meta": {
+      "title": "Upscale Image By"
+    }
+  }
+}
