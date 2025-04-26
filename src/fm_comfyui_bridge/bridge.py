@@ -2,9 +2,9 @@ import datetime
 import importlib.resources
 import io
 import json
-import os
 import random
 import time
+from pathlib import Path
 
 import requests
 from PIL import Image, PngImagePlugin
@@ -80,7 +80,7 @@ def get_image(id: any, server_url: str = None, output_node: str = None):
 def send_image(filename, upload_name=None, server_url: str = None):
     url = server_url if server_url else config.COMFYUI_URL
     if upload_name is None:
-        upload_name = os.path.basename(filename)
+        upload_name = Path(filename).name
     picture = Image.open(filename).convert("RGBA")
     picture_data = io.BytesIO()
     picture.save(picture_data, format="PNG")
@@ -123,14 +123,14 @@ def save_image(
         workspace = "./"
     if output_dir is None:
         output_dir = config.OUTPUTS_DIR
-    output_dir = os.path.join(workspace, output_dir)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    output_dir = Path(workspace) / output_dir
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True, exist_ok=True)
 
     if filename is None:
         timestamp = time.strftime("%Y%m%d-%H%M%S")
         filename = f"{timestamp}.png"
-    image_path = os.path.join(output_dir, filename)
+    image_path = output_dir / filename
     if posi is not None or nega is not None:
         metadata = PngImagePlugin.PngInfo()
         metadata.add_text("parameters", f"{posi}\nNegative prompt: {nega}\n")
