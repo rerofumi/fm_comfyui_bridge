@@ -215,7 +215,7 @@ def t2i_highreso_request_build(
     prompt_path[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
     prompt_path[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
     for node in config.COMFYUI_NODE_HR_SEED:
-        prompt_path[node]["inputs"]["noise_seed"] = random.randint(1, 10000000000)
+        prompt_path[node]["inputs"]["seed"] = random.randint(1, 10000000000)
     prompt_path[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
     prompt_path[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
     for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
@@ -259,7 +259,7 @@ def i2i_highreso_request_build(
     prompt_path[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
     prompt_path[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
     for node in config.COMFYUI_NODE_HR_SEED:
-        prompt_path[node]["inputs"]["noise_seed"] = random.randint(1, 10000000000)
+        prompt_path[node]["inputs"]["seed"] = random.randint(1, 10000000000)
     for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
         prompt_path[node[0]]["inputs"]["lora_name"] = lora.model
         prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength

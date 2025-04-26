@@ -144,7 +144,7 @@ models = api.list_models(folder="checkpoints")
 
 ## 変更履歴
 
-### バージョン 0.8.2
+### バージョン 0.8.3
 
 - HighReso モードを改定、計算量を減らし元の絵を残すワークフローに変更
 
