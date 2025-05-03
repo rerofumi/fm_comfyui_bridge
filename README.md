@@ -18,7 +18,7 @@ uv build
 
 ## 使い方
 
-`fm_comfui_bridge.bridge` 以下のメソッドを使用して、ComfyUI API とやり取りすることができます。
+`fm_comfyui_bridge.bridge` 以下のメソッドを使用して、ComfyUI API とやり取りすることができます。
 
 positive_prompt(text), negative_prompt(text), 出力モデル等の設定(SdLoraYaml) の 3つを渡すことで画像生成できることを目指しています。
 テキストプロンプトや設定を、python コードで変更しながらバッチ出力するような小物ツールを作成できます。
@@ -35,7 +35,7 @@ positive_prompt(text), negative_prompt(text), 出力モデル等の設定(SdLora
 - ComfyUI_Comfyroll_CustomNodes
 - ControlNet-LLLite-ComfyUI
   - tile model: bdsqlsz_controlllite_xl_tile_anime_beta.safetensors
-
+  - tile model: bdsqlsz_controllite_xl_tile_anime_beta.safetensors
 
 ### API ドキュメント
 
@@ -76,7 +76,7 @@ sample = api.generate_i2i_highreso(prompt="1girl", negative="low quality", lora=
 PIL 形式の画像を保存します。
 generate() で帰ってきた画像をファイルに保存するために使います。
 
-post, nega はテキストプロンプトを png の meta 情報として記録するためにつかわれます。指定無しでも構いません。
+posi, nega はテキストプロンプトを png の meta 情報として記録するためにつかわれます。指定無しでも構いません。
 
 保存先のファイルパス、ファイル名は `workspace/output_dir/filename.png` という形になります。
 workspace 未指定時の値はカレントディレクトリ、output_dir 未指定時の値は `outputs` です。
@@ -112,10 +112,11 @@ models = api.list_models(folder="checkpoints")
 
 #### プロパティ(読み出し)
 
-- `lora_enabled`: LoRAモデルの利用スイッチを返します。
-- `model`: LoRAモデルのファイル名を返します。
-- `trigger`: LoRAトリガーワードを返します。
-- `strength`: LoRAの強度を返します。
+- `lora_num`: LoRAモデル指定の数です。
+- `lora_enabled_flag(index)`: 指定した番号のLoRAモデルの利用スイッチを返します。
+- `lora_model(index)`: 指定した番号のLoRAモデルのファイル名を返します。
+- `lora_trigger(index)`: 指定した番号のLoRAトリガーワードを返します。
+- `lora_strength(index)`: 指定した番号のLoRAの強度を返します。
 - `checkpoint`: SDXLチェックポイントモデルを返します。
 - `image_size`: 出力イメージサイズを返します。
 - `vpred`: Vpredモードフラグを返します。
@@ -133,16 +134,20 @@ models = api.list_models(folder="checkpoints")
 - `image-size`: 画像のサイズを指定します。
   - `width`: 画像の横幅サイズ
   - `height`: 画像の縦幅サイズ
-- `lora`: LoRAモデルの設定を含むリストです。複数 LoRA の指定を意図してリストになっていますが現在は先頭の 1つしか使いません。
-  - `model`: 使用するLoRAモデルのファイル名を指定します。LoRA disable 時でも model は必要です、存在するファイルを指定してください。
+- `lora`: LoRAモデルの設定を含むリストです。複数 LoRA の指定も省略することも可能です。
   - `enabled`: LoRAモデルの使用を有効または無効にします。
+  - `model`: 使用するLoRAモデルのファイル名を指定します。
   - `strength`: LoRAの強度を指定します。
   - `trigger`: LoRAのトリガーワードを指定します。
-- `sampling`: サンプリングパラメータを指定します。省略可。
+- `sampling`: サンプリングパラメータを指定します。省略可。現在のところ HighReso モードでは無視されます。
   - `steps`: サンプリング数の指定
-  - `cfg`: CGFスケール値の指定
+  - `cfg`: CFGスケール値の指定
 
 ## 変更履歴
+
+### バージョン 0.9.0
+
+- 複数 LoRA の指定が可能になった
 
 ### バージョン 0.8.4
 
