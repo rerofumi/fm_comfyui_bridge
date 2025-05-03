@@ -2,62 +2,8 @@
   "id": "93d6d820-dd5e-4370-a86f-b6fce15c7a6a",
   "revision": 0,
   "last_node_id": 46,
-  "last_link_id": 98,
+  "last_link_id": 101,
   "nodes": [
-    {
-      "id": 14,
-      "type": "LoraLoader",
-      "pos": [
-        656.6640625,
-        54.750301361083984
-      ],
-      "size": [
-        315,
-        126
-      ],
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 54
-        },
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 55
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "slot_index": 0,
-          "links": [
-            41
-          ]
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "slot_index": 1,
-          "links": [
-            31,
-            38
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoader"
-      },
-      "widgets_values": [
-        "add-detail-xl.safetensors",
-        1.0000000000000002,
-        1.0000000000000002
-      ]
-    },
     {
       "id": 6,
       "type": "CR Text",
@@ -206,13 +152,13 @@
         235.75
       ],
       "flags": {},
-      "order": 12,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 31
+          "link": 100
         },
         {
           "name": "text_g",
@@ -303,13 +249,13 @@
         226.07000732421875
       ],
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
           "name": "clip",
           "type": "CLIP",
-          "link": 38
+          "link": 101
         },
         {
           "name": "text_g",
@@ -400,13 +346,13 @@
         93
       ],
       "flags": {},
-      "order": 10,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
           "name": "model",
           "type": "MODEL",
-          "link": 41
+          "link": 99
         }
       ],
       "outputs": [
@@ -440,7 +386,7 @@
         46
       ],
       "flags": {},
-      "order": 21,
+      "order": 20,
       "mode": 0,
       "inputs": [
         {
@@ -481,7 +427,7 @@
         531.780029296875
       ],
       "flags": {},
-      "order": 18,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -494,9 +440,7 @@
       "properties": {
         "Node name for S&R": "PreviewImage"
       },
-      "widgets_values": [
-        ""
-      ]
+      "widgets_values": []
     },
     {
       "id": 29,
@@ -510,7 +454,7 @@
         26
       ],
       "flags": {},
-      "order": 11,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -547,7 +491,7 @@
         753
       ],
       "flags": {},
-      "order": 22,
+      "order": 21,
       "mode": 0,
       "inputs": [
         {
@@ -559,8 +503,7 @@
       "outputs": [],
       "properties": {},
       "widgets_values": [
-        "%date:yyyy-MM-dd%/Bridge",
-        ""
+        "%date:yyyy-MM-dd%/Bridge"
       ]
     },
     {
@@ -613,7 +556,7 @@
         262
       ],
       "flags": {},
-      "order": 20,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
@@ -672,7 +615,7 @@
         46
       ],
       "flags": {},
-      "order": 19,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -712,7 +655,7 @@
         82
       ],
       "flags": {},
-      "order": 17,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -750,7 +693,7 @@
         46
       ],
       "flags": {},
-      "order": 15,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -838,7 +781,7 @@
         262
       ],
       "flags": {},
-      "order": 14,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -980,7 +923,7 @@
           "type": "MODEL",
           "slot_index": 0,
           "links": [
-            54
+            99
           ]
         },
         {
@@ -988,7 +931,8 @@
           "type": "CLIP",
           "slot_index": 1,
           "links": [
-            55
+            100,
+            101
           ]
         },
         {
@@ -1045,7 +989,8 @@
       ],
       "properties": {
         "Node name for S&R": "VAEEncode"
-      }
+      },
+      "widgets_values": []
     },
     {
       "id": 45,
@@ -1059,7 +1004,7 @@
         129.3000030517578
       ],
       "flags": {},
-      "order": 16,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -1102,14 +1047,6 @@
       11,
       0,
       "LATENT"
-    ],
-    [
-      31,
-      14,
-      1,
-      19,
-      0,
-      "CLIP"
     ],
     [
       32,
@@ -1160,44 +1097,12 @@
       "CONDITIONING"
     ],
     [
-      38,
-      14,
-      1,
-      20,
-      0,
-      "CLIP"
-    ],
-    [
-      41,
-      14,
-      0,
-      22,
-      0,
-      "MODEL"
-    ],
-    [
       42,
       22,
       0,
       7,
       0,
       "MODEL"
-    ],
-    [
-      54,
-      1,
-      0,
-      14,
-      0,
-      "MODEL"
-    ],
-    [
-      55,
-      1,
-      1,
-      14,
-      1,
-      "CLIP"
     ],
     [
       56,
@@ -1430,6 +1335,30 @@
       46,
       1,
       "VAE"
+    ],
+    [
+      99,
+      1,
+      0,
+      22,
+      0,
+      "MODEL"
+    ],
+    [
+      100,
+      1,
+      1,
+      19,
+      0,
+      "CLIP"
+    ],
+    [
+      101,
+      1,
+      1,
+      20,
+      0,
+      "CLIP"
     ]
   ],
   "groups": [],
@@ -1438,13 +1367,13 @@
     "ds": {
       "scale": 0.8264462809917354,
       "offset": [
-        -1552.048206899237,
-        -350.5519307902156
+        -227.45491084640602,
+        237.5817253412097
       ]
     },
     "node_versions": {
-      "comfy-core": "0.3.28",
-      "ComfyUI_Comfyroll_CustomNodes": "d78b780ae43fcf8c6b7c6505e6ffb4584281ceca"
+      "ComfyUI_Comfyroll_CustomNodes": "d78b780ae43fcf8c6b7c6505e6ffb4584281ceca",
+      "comfy-core": "0.3.28"
     },
     "VHS_latentpreview": false,
     "VHS_latentpreviewrate": 0

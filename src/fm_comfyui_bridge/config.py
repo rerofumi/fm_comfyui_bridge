@@ -1,14 +1,9 @@
 # API endpoint of ComfyUI
 COMFYUI_URL = "http://127.0.0.1:8188/"
 
-# ComfyUI model checkpoint
-COMFYUI_USE_CHECKPOINT = "illustriousXL_v01.safetensors"
 # ComfyUI checkpoint node
 COMFYUI_NODE_CHECKPOINT = "4"
 COMFYUI_NODE_HR_CHECKPOINT = "1"
-# ComfyUI LoRA checkpoint node
-COMFYUI_NODE_LORA_CHECKPOINT = "19"
-COMFYUI_NODE_HR_LORA_CHECKPOINT = [("14", 1.0)]
 # ComfyUI prompt node
 COMFYUI_NODE_PROMPT = "6"
 COMFYUI_NODE_HR_PROMPT = "4"

@@ -54,6 +54,22 @@ class SdLoraYaml:
         """LoRA strength"""
         return self.data["lora"][index]["strength"]
 
+    def lora_enabled_flag(self, index: int = 0) -> bool:
+        """LoRA モデルの利用スイッチ"""
+        return self.data["lora"][index]["enabled"] if "lora" in self.data else False
+
+    def lora_model(self, index: int = 0) -> str:
+        """LoRA model filename"""
+        return self.data["lora"][index]["model"]
+
+    def lora_trigger(self, index: int = 0) -> str:
+        """LoRA trigger word"""
+        return self.data["lora"][index]["trigger"]
+
+    def lora_strength(self, index: int = 0) -> float:
+        """LoRA strength"""
+        return self.data["lora"][index]["strength"]
+
     @property
     def checkpoint(self) -> str:
         """SDXL checkpoint model"""

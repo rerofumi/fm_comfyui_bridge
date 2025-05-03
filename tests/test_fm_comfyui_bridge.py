@@ -47,9 +47,9 @@ def test_lora_yaml_functionality():
     lora.read_from_yaml("./tests/lora.yaml")
     # 読み込んだ lola ファイルの中身確認
     assert lora.lora_enabled, "lora enabled check failed"
-    assert (
-        lora.checkpoint == "catTowerNoobaiXL_v15Vpred.safetensors"
-    ), "checkpoint check failed"
+    assert lora.checkpoint == "catTowerNoobaiXL_v17Vpred.safetensors", (
+        "checkpoint check failed"
+    )
     assert lora.image_size == (1344, 768), "image size check failed"
     assert lora.model == "lora-ix-tillhi-v1.safetensors", "model check failed"
     assert lora.trigger == "tillhi", "trigger check failed"
@@ -84,9 +84,9 @@ def test_bridge_i2i_highreso():
 
 def test_bridge_free():
     response = free(server_url=SERVER_URL)
-    assert (
-        response.status_code == 200
-    ), f"ステータスコードが不正です: {response.status_code}"
+    assert response.status_code == 200, (
+        f"ステータスコードが不正です: {response.status_code}"
+    )
 
 
 def test_bridge_list_models():

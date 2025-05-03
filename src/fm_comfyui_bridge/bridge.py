@@ -147,6 +147,95 @@ def get_input_image_name():
 
 
 #
+# LoRA ノード差し込み
+#
+
+
+def replace_value_recursive(data, old_value, new_value):
+    """
+    辞書やリスト内の特定の値を再帰的に置換し、新しいオブジェクトを返す。
+
+    Args:
+        data: 処理対象の辞書またはリスト。
+        old_value: 置換前の値。
+        new_value: 置換後の値。
+
+    Returns:
+        値が置換された新しい辞書またはリスト。
+    """
+    if isinstance(data, dict):
+        new_dict = {}
+        for key, value in data.items():
+            if value == old_value:
+                new_dict[key] = new_value
+            # 値が辞書かリストなら再帰呼び出し
+            elif isinstance(value, (dict, list)):
+                new_dict[key] = replace_value_recursive(value, old_value, new_value)
+            else:
+                # その他の型はそのままコピー
+                new_dict[key] = value
+        return new_dict
+    elif isinstance(data, list):
+        if data == [old_value, 0] or data == [old_value, 1]:
+            return [new_value, data[1]]
+        new_list = []
+        for item in data:
+            # 要素が辞書かリストなら再帰呼び出し
+            if isinstance(item, (dict, list)):
+                new_list.append(replace_value_recursive(item, old_value, new_value))
+            else:
+                # その他の型はそのままコピー
+                new_list.append(item)
+        return new_list
+    else:
+        # 辞書でもリストでもない場合はそのまま返す
+        return data
+
+
+def get_new_node_num(workflow: dict):
+    node_num = 0
+    for node in workflow:
+        num = int(node)
+        if num > node_num:
+            node_num = num
+    return node_num + 1
+
+
+def add_lora(workflow: dict, lora: SdLoraYaml, index: int, checkpoint: str = None):
+    lora_node = {}
+    lora_node_num = str(get_new_node_num(workflow))
+    lora_node[lora_node_num] = {
+        "inputs": {
+            "lora_name": lora.lora_model(index),
+            "trigger": lora.lora_trigger(index),
+            "strength_model": lora.lora_strength(index),
+            "strength_clip": lora.lora_strength(index),
+            "model": [checkpoint, 0],
+            "clip": [checkpoint, 1],
+        },
+        "class_type": "LoraLoader",
+        "_meta": {"title": "Load LoRA"},
+    }
+    workflow |= lora_node
+    # insert node
+    new_workflow = {}
+    for index, node in workflow.items():
+        if index is checkpoint or index is lora_node_num:
+            new_workflow[index] = node
+            continue
+        new_workflow[index] = replace_value_recursive(node, checkpoint, lora_node_num)
+    return new_workflow
+
+
+def insert_loras(workflow: dict, lora: SdLoraYaml, checkpoint: str = None):
+    lora_num = lora.lora_num
+    for i in range(lora_num):
+        if lora.lora_enabled_flag(i):
+            workflow = add_lora(workflow, lora, i, checkpoint)
+    return workflow
+
+
+#
 # Workflow builder
 #
 
@@ -158,44 +247,42 @@ def t2i_request_build(
     image_size: tuple[int, int],
 ) -> any:
     with importlib.resources.open_text(
-        "fm_comfyui_bridge.Workflow", "SDXL_LoRA_Base_API.json"
+        "fm_comfyui_bridge.Workflow", "SDXL_Base_API.json"
     ) as f:
-        prompt_path = json.load(f)
+        workflow_node = json.load(f)
     # パラメータ埋め込み(workflowによって異なる処理)
-    prompt_path[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = lora.checkpoint
-    prompt_path[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
-    prompt_path[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
-    prompt_path[config.COMFYUI_NODE_SEED]["inputs"]["noise_seed"] = random.randint(
+    workflow_node[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = (
+        lora.checkpoint
+    )
+    workflow_node[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
+    workflow_node[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
+    workflow_node[config.COMFYUI_NODE_SEED]["inputs"]["noise_seed"] = random.randint(
         1, 10000000000
     )
-    prompt_path[config.COMFYUI_NODE_SIZE]["inputs"]["width"] = image_size[0]
-    prompt_path[config.COMFYUI_NODE_SIZE]["inputs"]["height"] = image_size[1]
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["lora_name"] = lora.model
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_model"] = (
-        lora.strength
-    )
-    prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_clip"] = (
-        lora.strength
-    )
+    workflow_node[config.COMFYUI_NODE_SIZE]["inputs"]["width"] = image_size[0]
+    workflow_node[config.COMFYUI_NODE_SIZE]["inputs"]["height"] = image_size[1]
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    prompt_path[config.COMFYUI_NODE_OUTPUT]["inputs"]["filename_prefix"] = (
+    workflow_node[config.COMFYUI_NODE_OUTPUT]["inputs"]["filename_prefix"] = (
         f"{current_date}/Bridge"
     )
-    # lora, prediction
-    if not lora.lora_enabled:
-        prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_model"] = 0
-        prompt_path[config.COMFYUI_NODE_LORA_CHECKPOINT]["inputs"]["strength_clip"] = 0
+    # prediction
     if lora.vpred:
-        prompt_path[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = (
+        workflow_node[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = (
             "v_prediction"
         )
     else:
-        prompt_path[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = "eps"
+        workflow_node[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = (
+            "eps"
+        )
     if lora.steps is not None:
-        prompt_path[config.COMFYUI_NODE_SAMPLING_STEPS]["inputs"]["steps"] = lora.steps
+        workflow_node[config.COMFYUI_NODE_SAMPLING_STEPS]["inputs"]["steps"] = (
+            lora.steps
+        )
     if lora.cfg is not None:
-        prompt_path[config.COMFYUI_NODE_SAMPLING_CFG]["inputs"]["cfg"] = lora.cfg
-    return prompt_path
+        workflow_node[config.COMFYUI_NODE_SAMPLING_CFG]["inputs"]["cfg"] = lora.cfg
+    # lora
+    workflow_node = insert_loras(workflow_node, lora, config.COMFYUI_NODE_CHECKPOINT)
+    return workflow_node
 
 
 def t2i_highreso_request_build(
@@ -207,38 +294,31 @@ def t2i_highreso_request_build(
     with importlib.resources.open_text(
         "fm_comfyui_bridge.Workflow", "SDXL_HighReso_API.json"
     ) as f:
-        prompt_path = json.load(f)
+        workflow_node = json.load(f)
     # パラメータ埋め込み(workflowによって異なる処理)
-    prompt_path[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
+    workflow_node[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
         lora.checkpoint
     )
-    prompt_path[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
-    prompt_path[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
+    workflow_node[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
+    workflow_node[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
     for node in config.COMFYUI_NODE_HR_SEED:
-        prompt_path[node]["inputs"]["seed"] = random.randint(1, 10000000000)
-    prompt_path[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
-    prompt_path[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
-    for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
-        prompt_path[node[0]]["inputs"]["lora_name"] = lora.model
-        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength * node[1]
-        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength * node[1]
+        workflow_node[node]["inputs"]["seed"] = random.randint(1, 10000000000)
+    workflow_node[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
+    workflow_node[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    prompt_path[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
+    workflow_node[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
         f"{current_date}/Bridge"
     )
-    # lora, prediction
-    if not lora.lora_enabled:
-        for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
-            prompt_path[node[0]]["inputs"]["strength_model"] = 0
-            prompt_path[node[0]]["inputs"]["strength_clip"] = 0
+    # prediction
     if lora.vpred:
         for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            prompt_path[node]["inputs"]["sampling"] = "v_prediction"
+            workflow_node[node]["inputs"]["sampling"] = "v_prediction"
     else:
         for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            prompt_path[node]["inputs"]["sampling"] = "eps"
-
-    return prompt_path
+            workflow_node[node]["inputs"]["sampling"] = "eps"
+    # lora
+    workflow_node = insert_loras(workflow_node, lora, config.COMFYUI_NODE_HR_CHECKPOINT)
+    return workflow_node
 
 
 def i2i_highreso_request_build(
@@ -251,38 +331,31 @@ def i2i_highreso_request_build(
     with importlib.resources.open_text(
         "fm_comfyui_bridge.Workflow", "SDXL_HighReso_I2I_API.json"
     ) as f:
-        prompt_path = json.load(f)
+        workflow_node = json.load(f)
     # パラメータ埋め込み(workflowによって異なる処理)
-    prompt_path[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
+    workflow_node[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
         lora.checkpoint
     )
-    prompt_path[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
-    prompt_path[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
+    workflow_node[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
+    workflow_node[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
     for node in config.COMFYUI_NODE_HR_SEED:
-        prompt_path[node]["inputs"]["seed"] = random.randint(1, 10000000000)
-    for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
-        prompt_path[node[0]]["inputs"]["lora_name"] = lora.model
-        prompt_path[node[0]]["inputs"]["strength_model"] = lora.strength * node[1]
-        prompt_path[node[0]]["inputs"]["strength_clip"] = lora.strength * node[1]
+        workflow_node[node]["inputs"]["seed"] = random.randint(1, 10000000000)
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    prompt_path[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
+    workflow_node[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
         f"{current_date}/Bridge"
     )
     # upload image
-    prompt_path[config.COMFYUI_NODE_HR_LOAD_IMAGE]["inputs"]["image"] = upload_image
-    # lora, prediction
-    if not lora.lora_enabled:
-        for node in config.COMFYUI_NODE_HR_LORA_CHECKPOINT:
-            prompt_path[node[0]]["inputs"]["strength_model"] = 0
-            prompt_path[node[0]]["inputs"]["strength_clip"] = 0
+    workflow_node[config.COMFYUI_NODE_HR_LOAD_IMAGE]["inputs"]["image"] = upload_image
+    # prediction
     if lora.vpred:
         for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            prompt_path[node]["inputs"]["sampling"] = "v_prediction"
+            workflow_node[node]["inputs"]["sampling"] = "v_prediction"
     else:
         for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            prompt_path[node]["inputs"]["sampling"] = "eps"
-
-    return prompt_path
+            workflow_node[node]["inputs"]["sampling"] = "eps"
+    # lora
+    workflow_node = insert_loras(workflow_node, lora, config.COMFYUI_NODE_HR_CHECKPOINT)
+    return workflow_node
 
 
 #

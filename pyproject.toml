@@ -1,6 +1,6 @@
 [project]
 name = "fm-comfyui-bridge"
-version = "0.8.4"
+version = "0.9.0"
 description = "ComfyUI access bridge"
 readme = "README.md"
 authors = [

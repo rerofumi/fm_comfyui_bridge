@@ -1,4 +1,4 @@
-checkpoint: catTowerNoobaiXL_v15Vpred.safetensors
+checkpoint: catTowerNoobaiXL_v17Vpred.safetensors
 vpred: true
 image-size:
   height: 768
@@ -8,6 +8,10 @@ lora:
   model: lora-ix-tillhi-v1.safetensors
   strength: 0.9
   trigger: tillhi
+- enabled: true
+  model: lora-ix-largeeye-v1.safetensors
+  strength: 1.4
+  trigger: 
 sampling:
-  steps: 12
+  steps: 28
   cfg: 5.0

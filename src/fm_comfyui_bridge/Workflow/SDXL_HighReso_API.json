@@ -72,25 +72,6 @@
       "title": "VAE Decode"
     }
   },
-  "14": {
-    "inputs": {
-      "lora_name": "add-detail-xl.safetensors",
-      "strength_model": 1.0000000000000002,
-      "strength_clip": 1.0000000000000002,
-      "model": [
-        "1",
-        0
-      ],
-      "clip": [
-        "1",
-        1
-      ]
-    },
-    "class_type": "LoraLoader",
-    "_meta": {
-      "title": "Load LoRA"
-    }
-  },
   "19": {
     "inputs": {
       "width": [
@@ -120,7 +101,7 @@
         0
       ],
       "clip": [
-        "14",
+        "1",
         1
       ]
     },
@@ -158,7 +139,7 @@
         0
       ],
       "clip": [
-        "14",
+        "1",
         1
       ]
     },
@@ -169,7 +150,7 @@
   },
   "21": {
     "inputs": {
-      "filename_prefix": "2025-04-26/Bridge",
+      "filename_prefix": "2025-05-03/Bridge",
       "images": [
         "38",
         0
@@ -185,7 +166,7 @@
       "sampling": "eps",
       "zsnr": false,
       "model": [
-        "14",
+        "1",
         0
       ]
     },
