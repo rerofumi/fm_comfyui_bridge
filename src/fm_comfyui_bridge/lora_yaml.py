@@ -30,24 +30,29 @@ class SdLoraYaml:
             )
 
     @property
-    def lora_enabled(self) -> bool:
+    def lora_num(self) -> int:
+        """LoRA モデルの数"""
+        return len(self.data["lora"]) if "lora" in self.data else 0
+
+    @property
+    def lora_enabled(self, index: int = 0) -> bool:
         """LoRA モデルの利用スイッチ"""
-        return self.data["lora"][0]["enabled"] if "lora" in self.data else False
+        return self.data["lora"][index]["enabled"] if "lora" in self.data else False
 
     @property
-    def model(self) -> str:
+    def model(self, index: int = 0) -> str:
         """LoRA model filename"""
-        return self.data["lora"][0]["model"]
+        return self.data["lora"][index]["model"]
 
     @property
-    def trigger(self) -> str:
+    def trigger(self, index: int = 0) -> str:
         """LoRA trigger word"""
-        return self.data["lora"][0]["trigger"]
+        return self.data["lora"][index]["trigger"]
 
     @property
-    def strength(self) -> float:
+    def strength(self, index: int = 0) -> float:
         """LoRA strength"""
-        return self.data["lora"][0]["strength"]
+        return self.data["lora"][index]["strength"]
 
     @property
     def checkpoint(self) -> str:
