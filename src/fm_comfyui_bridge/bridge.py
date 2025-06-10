@@ -11,21 +11,19 @@ from PIL import Image, PngImagePlugin
 
 import fm_comfyui_bridge.config as config
 from fm_comfyui_bridge.lora_yaml import SdLoraYaml
+from .workflow import WorkflowTemplate
 
 #
 # ComfyUI API request
 #
 
-
-def send_request(prompt: str, server_url: str = None) -> str | None:
-    # APIにリクエスト送信
+def send_request(prompt: dict, server_url: str = None) -> str | None:
     headers = {"Content-Type": "application/json"}
-    data = {"prompt": prompt}
     url = server_url if server_url else config.COMFYUI_URL
     response = requests.post(
         f"{url}prompt",
         headers=headers,
-        data=json.dumps(data).encode("utf-8"),
+        data=json.dumps({"prompt": prompt}).encode("utf-8"),
     )
     if response.status_code != 200:
         print(f"Error: {response.status_code}")
@@ -35,7 +33,6 @@ def send_request(prompt: str, server_url: str = None) -> str | None:
 
 
 def await_request(check_interval: float, retry_interval: float, server_url: str = None):
-    # 一定時間ごとにリクエストの状態を確認
     url = server_url if server_url else config.COMFYUI_URL
     while True:
         time.sleep(check_interval)
@@ -57,8 +54,7 @@ def await_request(check_interval: float, retry_interval: float, server_url: str 
 def get_image(id: any, server_url: str = None, output_node: str = None):
     url = server_url if server_url else config.COMFYUI_URL
     if not output_node:
-        output_node = config.COMFYUI_NODE_OUTPUT
-    # リクエストヒストリからファイル名を取得
+        output_node = config.COMFYUI_NODE_OUTPUT # Still used
     headers = {"Content-Type": "application/json"}
     response = requests.get(f"{url}history/{id}", headers=headers)
     if response.status_code != 200:
@@ -114,7 +110,6 @@ def list_models(folder: str, server_url: str = None):
 # Image works
 #
 
-
 def save_image(
     image, posi=None, nega=None, filename=None, workspace=None, output_dir=None
 ):
@@ -122,7 +117,7 @@ def save_image(
     if workspace is None:
         workspace = "./"
     if output_dir is None:
-        output_dir = config.OUTPUTS_DIR
+        output_dir = config.OUTPUTS_DIR # Still used
     output_dir = Path(workspace) / output_dir
     if not output_dir.exists():
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -147,142 +142,45 @@ def get_input_image_name():
 
 
 #
-# LoRA ノード差し込み
+# LoRA functions removed as they are now part of WorkflowTemplate
 #
-
-
-def replace_value_recursive(data, old_value, new_value):
-    """
-    辞書やリスト内の特定の値を再帰的に置換し、新しいオブジェクトを返す。
-
-    Args:
-        data: 処理対象の辞書またはリスト。
-        old_value: 置換前の値。
-        new_value: 置換後の値。
-
-    Returns:
-        値が置換された新しい辞書またはリスト。
-    """
-    if isinstance(data, dict):
-        new_dict = {}
-        for key, value in data.items():
-            if value == old_value:
-                new_dict[key] = new_value
-            # 値が辞書かリストなら再帰呼び出し
-            elif isinstance(value, (dict, list)):
-                new_dict[key] = replace_value_recursive(value, old_value, new_value)
-            else:
-                # その他の型はそのままコピー
-                new_dict[key] = value
-        return new_dict
-    elif isinstance(data, list):
-        if data == [old_value, 0] or data == [old_value, 1]:
-            return [new_value, data[1]]
-        new_list = []
-        for item in data:
-            # 要素が辞書かリストなら再帰呼び出し
-            if isinstance(item, (dict, list)):
-                new_list.append(replace_value_recursive(item, old_value, new_value))
-            else:
-                # その他の型はそのままコピー
-                new_list.append(item)
-        return new_list
-    else:
-        # 辞書でもリストでもない場合はそのまま返す
-        return data
-
-
-def get_new_node_num(workflow: dict):
-    node_num = 0
-    for node in workflow:
-        num = int(node)
-        if num > node_num:
-            node_num = num
-    return node_num + 1
-
-
-def add_lora(workflow: dict, lora: SdLoraYaml, index: int, checkpoint: str = None):
-    lora_node = {}
-    lora_node_num = str(get_new_node_num(workflow))
-    lora_node[lora_node_num] = {
-        "inputs": {
-            "lora_name": lora.lora_model(index),
-            "trigger": lora.lora_trigger(index),
-            "strength_model": lora.lora_strength(index),
-            "strength_clip": lora.lora_strength(index),
-            "model": [checkpoint, 0],
-            "clip": [checkpoint, 1],
-        },
-        "class_type": "LoraLoader",
-        "_meta": {"title": "Load LoRA"},
-    }
-    workflow |= lora_node
-    # insert node
-    new_workflow = {}
-    for index, node in workflow.items():
-        if index is checkpoint or index is lora_node_num:
-            new_workflow[index] = node
-            continue
-        new_workflow[index] = replace_value_recursive(node, checkpoint, lora_node_num)
-    return new_workflow
-
-
-def insert_loras(workflow: dict, lora: SdLoraYaml, checkpoint: str = None):
-    lora_num = lora.lora_num
-    for i in range(lora_num):
-        if lora.lora_enabled_flag(i):
-            workflow = add_lora(workflow, lora, i, checkpoint)
-    return workflow
-
 
 #
 # Workflow builder
 #
-
 
 def t2i_request_build(
     prompt: str,
     negative: str,
     lora: SdLoraYaml,
     image_size: tuple[int, int],
-) -> any:
-    with importlib.resources.open_text(
-        "fm_comfyui_bridge.Workflow", "SDXL_Base_API.json"
-    ) as f:
-        workflow_node = json.load(f)
-    # パラメータ埋め込み(workflowによって異なる処理)
-    workflow_node[config.COMFYUI_NODE_CHECKPOINT]["inputs"]["ckpt_name"] = (
-        lora.checkpoint
-    )
-    workflow_node[config.COMFYUI_NODE_PROMPT]["inputs"]["text"] = prompt
-    workflow_node[config.COMFYUI_NODE_NEGATIVE]["inputs"]["text"] = negative
-    workflow_node[config.COMFYUI_NODE_SEED]["inputs"]["noise_seed"] = random.randint(
-        1, 10000000000
-    )
-    workflow_node[config.COMFYUI_NODE_SIZE]["inputs"]["width"] = image_size[0]
-    workflow_node[config.COMFYUI_NODE_SIZE]["inputs"]["height"] = image_size[1]
+) -> dict:
+    wf = WorkflowTemplate("SDXL_Base_API.json")
+
+    wf.set_input_by_title("Load Checkpoint", "ckpt_name", lora.checkpoint)
+    wf.set_input_by_title("CLIP Text Encode (Positive Prompt)", "text", prompt) # Updated title
+    wf.set_input_by_title("CLIP Text Encode (Negative Prompt)", "text", negative) # Updated title
+
+    wf.set_input_by_title("SamplerCustom", "noise_seed", random.randint(1, 10000000000))
+    wf.set_input_by_title("Empty Latent Image", "width", image_size[0])
+    wf.set_input_by_title("Empty Latent Image", "height", image_size[1])
+
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    workflow_node[config.COMFYUI_NODE_OUTPUT]["inputs"]["filename_prefix"] = (
-        f"{current_date}/Bridge"
-    )
-    # prediction
-    if lora.vpred:
-        workflow_node[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = (
-            "v_prediction"
-        )
-    else:
-        workflow_node[config.COMFYUI_NODE_SAMPLING_DISCRETE]["inputs"]["sampling"] = (
-            "eps"
-        )
+    wf.set_input_by_title("Save Image", "filename_prefix", f"{current_date}/Bridge")
+
+    sampling_value = "v_prediction" if lora.vpred else "eps"
+    wf.set_input_by_title("ModelSamplingDiscrete", "sampling", sampling_value)
+
     if lora.steps is not None:
-        workflow_node[config.COMFYUI_NODE_SAMPLING_STEPS]["inputs"]["steps"] = (
-            lora.steps
-        )
+        # In SDXL_Base_API.json, node "12" is BasicScheduler for steps.
+        wf.set_input_by_title("BasicScheduler", "steps", lora.steps)
     if lora.cfg is not None:
-        workflow_node[config.COMFYUI_NODE_SAMPLING_CFG]["inputs"]["cfg"] = lora.cfg
-    # lora
-    workflow_node = insert_loras(workflow_node, lora, config.COMFYUI_NODE_CHECKPOINT)
-    return workflow_node
+        # In SDXL_Base_API.json, node "10" is SamplerCustom for cfg.
+        wf.set_input_by_title("SamplerCustom", "cfg", lora.cfg)
+
+    if hasattr(lora, 'lora_num') and lora.lora_num > 0 :
+        wf.insert_loras(lora, "Load Checkpoint")
+    return wf.get_workflow()
 
 
 def t2i_highreso_request_build(
@@ -290,35 +188,41 @@ def t2i_highreso_request_build(
     negative: str,
     lora: SdLoraYaml,
     image_size: tuple[int, int],
-) -> any:
-    with importlib.resources.open_text(
-        "fm_comfyui_bridge.Workflow", "SDXL_HighReso_API.json"
-    ) as f:
-        workflow_node = json.load(f)
-    # パラメータ埋め込み(workflowによって異なる処理)
-    workflow_node[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
-        lora.checkpoint
-    )
-    workflow_node[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
-    workflow_node[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
-    for node in config.COMFYUI_NODE_HR_SEED:
-        workflow_node[node]["inputs"]["seed"] = random.randint(1, 10000000000)
-    workflow_node[config.COMFYUI_NODE_HR_SIZE_WIDTH]["inputs"]["value"] = image_size[0]
-    workflow_node[config.COMFYUI_NODE_HR_SIZE_HEIGHT]["inputs"]["value"] = image_size[1]
+) -> dict:
+    wf = WorkflowTemplate("SDXL_HighReso_API.json")
+
+    wf.set_input_by_title("Load Checkpoint", "ckpt_name", lora.checkpoint)
+    wf.set_input_by_title("Positive Prompt Text", "text", prompt) # Updated title
+    wf.set_input_by_title("Negative Prompt Text", "text", negative) # Updated title
+
+    # Removed loop for COMFYUI_NODE_HR_SEED, now using unique titles
+    wf.set_input_by_title("KSampler (Base Pass)", "seed", random.randint(1, 10000000000)) # Updated title
+    wf.set_input_by_title("KSampler (Hi-Res Pass)", "seed", random.randint(1, 10000000000)) # Updated title
+    # TODO: Add steps and cfg for these KSamplers if they are part of lora object and need setting
+    # For example:
+    # if hasattr(lora, 'base_steps') and lora.base_steps is not None:
+    #     wf.set_input_by_title("KSampler (Base Pass)", "steps", lora.base_steps)
+    # if hasattr(lora, 'base_cfg') and lora.base_cfg is not None:
+    #     wf.set_input_by_title("KSampler (Base Pass)", "cfg", lora.base_cfg)
+    # if hasattr(lora, 'hires_steps') and lora.hires_steps is not None:
+    #     wf.set_input_by_title("KSampler (Hi-Res Pass)", "steps", lora.hires_steps)
+    # if hasattr(lora, 'hires_cfg') and lora.hires_cfg is not None:
+    #     wf.set_input_by_title("KSampler (Hi-Res Pass)", "cfg", lora.hires_cfg)
+
+    wf.set_input_by_title("Width", "value", image_size[0]) # For initial latent
+    wf.set_input_by_title("Hight", "value", image_size[1]) # For initial latent ("Hight" is the title in JSON)
+
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    workflow_node[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
-        f"{current_date}/Bridge"
-    )
-    # prediction
-    if lora.vpred:
-        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            workflow_node[node]["inputs"]["sampling"] = "v_prediction"
-    else:
-        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            workflow_node[node]["inputs"]["sampling"] = "eps"
-    # lora
-    workflow_node = insert_loras(workflow_node, lora, config.COMFYUI_NODE_HR_CHECKPOINT)
-    return workflow_node
+    wf.set_input_by_title("Save Image", "filename_prefix", f"{current_date}/Bridge")
+
+    sampling_value = "v_prediction" if lora.vpred else "eps"
+    # Removed loop for COMFYUI_NODE_HR_SAMPLING_DISCRETE
+    # Assuming "ModelSamplingDiscrete" is the single node to control this for the whole graph.
+    wf.set_input_by_title("ModelSamplingDiscrete", "sampling", sampling_value)
+
+    if hasattr(lora, 'lora_num') and lora.lora_num > 0 :
+        wf.insert_loras(lora, "Load Checkpoint")
+    return wf.get_workflow()
 
 
 def i2i_highreso_request_build(
@@ -326,36 +230,31 @@ def i2i_highreso_request_build(
     negative: str,
     lora: SdLoraYaml,
     upload_image: str,
-    image_size: tuple[int, int],
-) -> any:
-    with importlib.resources.open_text(
-        "fm_comfyui_bridge.Workflow", "SDXL_HighReso_I2I_API.json"
-    ) as f:
-        workflow_node = json.load(f)
-    # パラメータ埋め込み(workflowによって異なる処理)
-    workflow_node[config.COMFYUI_NODE_HR_CHECKPOINT]["inputs"]["ckpt_name"] = (
-        lora.checkpoint
-    )
-    workflow_node[config.COMFYUI_NODE_HR_PROMPT]["inputs"]["text"] = prompt
-    workflow_node[config.COMFYUI_NODE_HR_NEGATIVE]["inputs"]["text"] = negative
-    for node in config.COMFYUI_NODE_HR_SEED:
-        workflow_node[node]["inputs"]["seed"] = random.randint(1, 10000000000)
+    image_size: tuple[int, int], # image_size is not used to set latent size directly
+) -> dict:
+    wf = WorkflowTemplate("SDXL_HighReso_I2I_API.json")
+
+    wf.set_input_by_title("Load Checkpoint", "ckpt_name", lora.checkpoint)
+    wf.set_input_by_title("Positive Prompt Text", "text", prompt) # Updated title
+    wf.set_input_by_title("Negative Prompt Text", "text", negative) # Updated title
+
+    # Removed loop for COMFYUI_NODE_HR_SEED, now using unique titles
+    wf.set_input_by_title("KSampler (Base Pass)", "seed", random.randint(1, 10000000000)) # Updated title
+    wf.set_input_by_title("KSampler (Hi-Res Pass)", "seed", random.randint(1, 10000000000)) # Updated title
+    # TODO: Add steps and cfg for these KSamplers if they are part of lora object
+
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    workflow_node[config.COMFYUI_NODE_HR_OUTPUT]["inputs"]["filename_prefix"] = (
-        f"{current_date}/Bridge"
-    )
-    # upload image
-    workflow_node[config.COMFYUI_NODE_HR_LOAD_IMAGE]["inputs"]["image"] = upload_image
-    # prediction
-    if lora.vpred:
-        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            workflow_node[node]["inputs"]["sampling"] = "v_prediction"
-    else:
-        for node in config.COMFYUI_NODE_HR_SAMPLING_DISCRETE:
-            workflow_node[node]["inputs"]["sampling"] = "eps"
-    # lora
-    workflow_node = insert_loras(workflow_node, lora, config.COMFYUI_NODE_HR_CHECKPOINT)
-    return workflow_node
+    wf.set_input_by_title("Save Image", "filename_prefix", f"{current_date}/Bridge")
+
+    wf.set_input_by_title("Load Image", "image", upload_image)
+
+    sampling_value = "v_prediction" if lora.vpred else "eps"
+    # Removed loop for COMFYUI_NODE_HR_SAMPLING_DISCRETE
+    wf.set_input_by_title("ModelSamplingDiscrete", "sampling", sampling_value)
+
+    if hasattr(lora, 'lora_num') and lora.lora_num > 0 :
+        wf.insert_loras(lora, "Load Checkpoint")
+    return wf.get_workflow()
 
 
 #
@@ -367,11 +266,10 @@ def generate(
     lora: SdLoraYaml,
     image_size: tuple[int, int],
     server_url: str = None,
-) -> Image:
+) -> Image | None:
     id = None
-    id = send_request(
-        t2i_request_build(prompt, negative, lora, image_size), server_url=server_url
-    )
+    request_payload = t2i_request_build(prompt, negative, lora, image_size)
+    id = send_request(request_payload, server_url=server_url)
     if id:
         await_request(1, 3, server_url=server_url)
         return get_image(
@@ -386,12 +284,10 @@ def generate_highreso(
     lora: SdLoraYaml,
     image_size: tuple[int, int],
     server_url: str = None,
-) -> Image:
+) -> Image | None:
     id = None
-    id = send_request(
-        t2i_highreso_request_build(prompt, negative, lora, image_size),
-        server_url=server_url,
-    )
+    request_payload = t2i_highreso_request_build(prompt, negative, lora, image_size)
+    id = send_request(request_payload, server_url=server_url)
     if id:
         await_request(1, 3, server_url=server_url)
         return get_image(
@@ -407,17 +303,15 @@ def generate_i2i_highreso(
     image_size: tuple[int, int],
     input_image_filepath: str,
     server_url: str = None,
-) -> Image:
-    # input image upload
-    upload_image = get_input_image_name()
-    send_image(input_image_filepath, upload_name=upload_image, server_url=server_url)
+) -> Image | None:
+    upload_image_filename = get_input_image_name()
+    send_image(input_image_filepath, upload_name=upload_image_filename, server_url=server_url)
 
-    prompt = i2i_highreso_request_build(
-        prompt, negative, lora, upload_image, image_size
+    request_payload = i2i_highreso_request_build(
+        prompt, negative, lora, upload_image_filename, image_size
     )
-    #
     id = None
-    id = send_request(prompt, server_url=server_url)
+    id = send_request(request_payload, server_url=server_url)
     if id:
         await_request(1, 3, server_url=server_url)
         return get_image(

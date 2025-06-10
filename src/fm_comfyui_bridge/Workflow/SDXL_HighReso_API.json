@@ -14,7 +14,7 @@
     },
     "class_type": "CR Text",
     "_meta": {
-      "title": "🔤 CR Text"
+      "title": "Positive Prompt Text"
     }
   },
   "6": {
@@ -23,7 +23,7 @@
     },
     "class_type": "CR Text",
     "_meta": {
-      "title": "🔤 CR Text"
+      "title": "Negative Prompt Text"
     }
   },
   "7": {
@@ -53,7 +53,7 @@
     },
     "class_type": "KSampler",
     "_meta": {
-      "title": "KSampler"
+      "title": "KSampler (Base Pass)"
     }
   },
   "11": {
@@ -279,7 +279,7 @@
     },
     "class_type": "KSampler",
     "_meta": {
-      "title": "KSampler"
+      "title": "KSampler (Hi-Res Pass)"
     }
   },
   "38": {
