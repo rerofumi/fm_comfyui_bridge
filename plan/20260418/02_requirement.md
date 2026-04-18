@@ -12,7 +12,7 @@
 - LoRA ノードの挿入対象や対象ノード（特に CLIP の有無）を workflow 側の意図に従って選択できるようにする。
 
 ### 2.2 スコープ
-- 本件で追加するのは `fm_comfy_request` サブパッケージ、および CLI コマンドである。
+- 本件で追加するのは `fm_comfy_request` 独立トップレベルパッケージ、および CLI コマンドである。
 - 旧モジュール（`fm_comfyui_bridge.bridge`、`fm_comfyui_bridge.lora_yaml` 等）の機能・互換性は維持する。
 
 ### 2.3 用語定義
@@ -24,7 +24,7 @@
 
 ### 3.1 パッケージ配置
 - 配布パッケージ名は現行どおり `fm_comfyui_bridge`（`pyproject.toml` の `name` は変更しない）を維持する。
-- パッケージ内に旧 API（`fm_comfyui_bridge.bridge` 等）と、新 API（`fm_comfyui_bridge.fm_comfy_request` 相当）の両方を提供する。
+- 同一配布物内に旧 API 用トップレベルパッケージ `fm_comfyui_bridge` と、新 API 用トップレベルパッケージ `fm_comfy_request` の両方を含める。
 - 利用者は用途に応じて旧／新を選択的に `import` できること。
 
 ### 3.2 新モジュールの公開 API
@@ -53,7 +53,7 @@
 ### 4.3 Workflow の検証
 - 以下について静的に検証し、不整合があれば例外で通知する。
   - 書き換え場所指定で指定されたノード名または node ID が workflow 内に存在すること。
-  - I2I 要求時は `LoadImage` ノードの存在、および `input` キーでそのノードが指定されていること。
+  - I2I 要求時は `input` キーで指定されたノードが workflow 内に存在すること。現在の実装では `LoadImage` class であることまでは検証しない。
 
 ## 5. 書き換え場所指定 text（YAML）要求
 
@@ -62,7 +62,7 @@
 - 複数存在した場合はエラーとする。
 
 ### 5.2 指定可能キー
-以下のキーで workflow のノード名または node ID を指し示せること。全て省略可能だが、指定したキーは workflow 内に対応ノードが存在しなければならない。
+以下のキーで workflow のノード名または node ID を指し示せること。`model` は必須で、その他は省略可能。指定したキーは workflow 内に対応ノードが存在しなければならない。
 - `model`: LoRA 挿入起点となる model 出力ソースノード名（checkpoint / diffusion model / 既存 LoRA ノード等）
 - `clip`: clip 付き LoRA に使用する clip 出力ソースノード名（CLIP loader / checkpoint / 既存 LoRA ノード等）
 - `prompt`: プロンプトテキストノード名
@@ -86,7 +86,9 @@
 
 ### 5.4 デフォルト値の扱い
 - 書き換え場所指定で示されたノードの既存値を、リクエスト未指定時のデフォルト値として使用する。
-- SdLoraYaml（後述）の値が存在する場合は、SdLoraYaml > workflow 既存値 の優先順位で適用する。
+- ただし seed は、seed binding が存在し、かつ `seed` が未指定で `random_seed=True` の場合、クライアント側で毎回ランダム値を生成して書き込む。これは同一 workflow / prompt の連続実行時に ComfyUI キャッシュで 0 秒完了することを避けるためである。
+- `random_seed=False` の場合は workflow 既存 seed を維持する。
+- SdLoraYaml は現在の公開 API 実装では LoRA 挿入用途に限定して扱う。SdLoraYaml 由来のサンプリング値上書きは未実装。
 - リクエスト関数の引数で明示指定された値は最優先とする。
 
 ## 6. リクエスト API 要求
@@ -94,17 +96,19 @@
 ### 6.1 リクエスト種別
 - 通常リクエスト（T2I 相当）と I2I リクエストの 2 種類を提供する。
 - 旧モジュールの HighReso 相当 API は新モジュールでは提供しない（workflow 側で表現する）。
-- I2I は workflow に `LoadImage` ノードが存在し、書き換え場所指定の `input` が有効な場合のみ呼び出し可能とする。条件未達時は呼び出し時点で例外とする。
+- I2I は書き換え場所指定の `input` が存在し、有効な node ID または unique title として解決できる場合のみ呼び出し可能とする。現在の実装では node class が `LoadImage` であることまでは検証しない。条件未達時は呼び出し時点で例外とする。
 
 ### 6.2 必須／任意パラメータ
 - **必須**: workflow 指定（ファイル名またはパス）
 - **任意**:
   - `prompt`（省略時は workflow の既存値）
   - `negative`（省略時は workflow の既存値）
-  - `SdLoraYaml` インスタンス（省略時は LoRA 挿入・サンプリング上書き等を行わない）
+  - `SdLoraYaml` / `ConfigLoraYaml` インスタンス（省略時は LoRA 挿入を行わない）
   - 接続先 URL（省略時は `http://127.0.0.1:8188/`、または環境変数の値）
-  - 画像サイズ、seed、steps、cfg 等の個別パラメータ（省略時は SdLoraYaml → workflow の順に解決）
+  - `seed`（省略時は seed binding があればランダム生成）
+  - `random_seed`（省略時 `True`。`False` の場合は workflow 既存 seed を維持）
   - I2I 用入力画像（パスまたはバイナリ、I2I 時のみ）
+- 画像サイズ、steps、cfg、sampling mode の上書き処理は内部関数に存在するが、現在の公開 API / CLI では引数として露出していない。
 - workflow のみを指定して呼び出した場合でも何らかの画像生成が成功することを保証する。
 
 ### 6.3 戻り値
@@ -181,7 +185,7 @@
 
 ### 10.3 タイムアウト・リトライ
 - 接続待ちのタイムアウト時間を設定可能とする（デフォルト値は本書では規定せず、設計書で定義）。
-- 一過性の通信エラーについては、リトライ回数・間隔を設定可能とする。
+- `ClientSettings` にはリトライ回数・間隔の項目があるが、現在の通信実装では自動リトライは未実装とする。
 
 ## 11. 例外仕様要求
 
@@ -204,15 +208,15 @@
 - pyproject.toml の `[project.scripts]` 等でエントリポイントを登録する。
 
 ### 12.2 最低限のサブコマンド／機能
-- workflow 一覧表示（配置ディレクトリ内の workflow ファイル名）
-- workflow の書き換え場所指定 YAML の表示・検証
+- workflow 一覧表示（`workflow-list`）
+- workflow の書き換え場所指定 YAML の表示・検証（`workflow-inspect`）
 - 画像生成（通常 / I2I）
-  - workflow・prompt・negative・lora yaml・接続先 URL 等を引数で指定可能
-  - 出力先ファイル名・ディレクトリを指定可能
-  - 進捗を標準出力に表示できる
+  - workflow・prompt・negative・seed・接続先 URL 等を引数で指定可能
+  - `--seed` 指定時は固定 seed、未指定時は client 側でランダム seed、`--no-random-seed` 指定時は workflow 既存 seed を使用する
+  - 通常生成では出力先ファイル名を `--output` で指定可能
+  - 現在の CLI では lora yaml 指定、出力ディレクトリ指定、進捗の標準出力表示は未実装
 - モデル一覧取得（フォルダ指定）
 - メモリ解放
-
 ### 12.3 非機能
 - 終了コードで成功／失敗を区別する。
 - 例外は人間可読なメッセージに整形して表示する（スタックトレースはデバッグオプション指定時のみ）。
@@ -243,7 +247,7 @@
 - 書き換え場所指定 YAML のサンプル、LoRA 挿入例、CLI 使用例を含めること。
 
 ### 13.5 ロギング
-- 標準 `logging` モジュールでログを出力可能とする。CLI の詳細表示はログレベル切替で行う。
+- 現在の実装では標準 `logging` によるログ出力と CLI のログレベル切替は未実装とする。
 
 ## 14. 後方互換性要求
 
@@ -253,7 +257,7 @@
 ## 15. 受け入れ条件（サマリ）
 
 以下が全て満たされた時点で本要求を満たしたとみなす。
-- 新モジュールが同一配布パッケージから `import` 可能で、旧モジュールと共存している。
+- 新モジュールが同一配布パッケージに含まれる独立トップレベルパッケージとして `import` 可能で、旧モジュールと共存している。
 - `~/.config/fm_comfy_request/workflow/` 配下の任意 workflow に対し、書き換え場所指定 YAML の記述のみで通常 / I2I 生成が実行できる。
 - checkpoint 一体型 workflow と model / clip 分離型 workflow の双方で、LoRA の clip 有 / model only の切替および複数挿入が YAML 指定で動作する。
 - 戻り値はバイナリで、meta 情報を保持した保存ができる。PIL 変換ユーティリティも利用できる。

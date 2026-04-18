@@ -199,3 +199,28 @@ models = api.list_models(folder="checkpoints")
 ## ライセンス
 
 このプロジェクトはMITライセンスの下で提供されています。
+
+## New module: fm_comfy_request
+
+The new `fm_comfy_request` package loads workflow JSON from `~/.config/fm_comfy_request/workflow/` by default and reads a `fm_comfy_request` multiline text node inside the workflow as YAML bindings.
+
+### CLI
+
+```bash
+uv run fm-comfy-request workflow-list
+uv run fm-comfy-request workflow-inspect example.json
+uv run fm-comfy-request generate example.json --prompt "1girl"
+uv run fm-comfy-request generate example.json --prompt "1girl" --seed 12345
+```
+
+`generate` and `generate-i2i` randomize the bound seed by default when no seed is specified, including both Python API and CLI usage. Use `--seed <value>` for a fixed CLI seed, or `--no-random-seed` to keep the seed stored in the workflow.
+
+### YAML binding example
+
+```yaml
+model: "Checkpoint Loader"
+prompt: "Positive Prompt"
+negative-prompt: "Negative Prompt"
+output: "Save Image"
+```
+
