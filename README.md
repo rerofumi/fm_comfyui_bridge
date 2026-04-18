@@ -253,7 +253,7 @@ cfg: "SamplerCustom"
 ```powershell
 uv run fm-comfy-request workflow-list
 uv run fm-comfy-request workflow-inspect SDXL_LoRA_Base.json
-uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl, green hair" --output check.png
+uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl, green hair" --model rrodWisdom_v40.safetensors --output check.png
 ```
 
 接続先や workflow ディレクトリを指定する場合は、サブコマンドより前にグローバルオプションを置きます。
@@ -291,6 +291,8 @@ uv run fm-comfy-request free
 
 `generate --json` は `GenerationResult` の内容を JSON 形式で表示します。`workflow_final` や `history` も含むため、確認用途では出力が大きくなる場合があります。
 
+`--model` は workflow meta YAML の `model` が指す loader ノードを書き換えます。対象 node の `class_type` は `CheckpointLoaderSimple` または `UNETLoader` である必要があり、それぞれ `ckpt_name` / `unet_name` にモデル名を書き込みます。
+
 現在の CLI では `--lora-yaml`, `--width`, `--height`, `--steps`, `--cfg`, `--timeout`, `--verbose` は未実装です。LoRA を使う場合は Python API から `ConfigLoraYaml` または `SdLoraYaml` を渡してください。
 
 ### Python 関数 API
@@ -304,6 +306,7 @@ from fm_comfy_request import generate
 
 result = generate(
     "SDXL_LoRA_Base.json",
+    model="rrodWisdom_v40.safetensors",
     prompt="1girl, green hair",
     negative="low quality, worst quality",
     server_url="http://127.0.0.1:8188/",
@@ -383,8 +386,8 @@ result = client.generate("SDXL_LoRA_Base.json", prompt="1girl")
 
 利用できる主なメソッドです。
 
-- `generate(workflow, prompt=None, negative=None, lora=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
-- `generate_i2i(workflow, input_image, prompt=None, negative=None, lora=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
+- `generate(workflow, prompt=None, negative=None, lora=None, model=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
+- `generate_i2i(workflow, input_image, prompt=None, negative=None, lora=None, model=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
 - `inspect_workflow(workflow)`
 - `list_workflows()`
 - `list_models(folder, server_url=None)`
@@ -401,6 +404,7 @@ from fm_comfy_request import ConfigLoraYaml, generate
 
 lora = ConfigLoraYaml()
 lora.data = {
+    "model": "rrodWisdom_v40.safetensors",
     "lora": [
         {
             "enabled": True,
@@ -414,6 +418,8 @@ lora.data = {
 result = generate("SDXL_LoRA_Base.json", prompt="1girl", lora=lora)
 ```
 
+`ConfigLoraYaml` / `SdLoraYaml` に top-level `model` または従来の `checkpoint` が含まれる場合も、workflow meta YAML の `model` が指す loader ノードへ反映します。
+
 `model_only: true` の LoRA は `LoraLoaderModelOnly` として model のみに接続します。未指定または `false` の場合は `LoraLoader` として model と clip に接続します。
 
 ### 戻り値
@@ -425,7 +431,7 @@ result = generate("SDXL_LoRA_Base.json", prompt="1girl", lora=lora)
 - `prompt_id`: ComfyUI の prompt ID
 - `client_id`: WebSocket 接続で使った client ID
 - `workflow_path`: 読み込んだ workflow のパス
-- `workflow_final`: prompt、seed、LoRA などを反映した最終 workflow
+- `workflow_final`: model、prompt、seed、LoRA などを反映した最終 workflow
 - `output_node_id`: 出力として参照した SaveImage node ID
 - `images`: `GeneratedImage` のリスト
 - `history`: ComfyUI の `/history/{prompt_id}` 応答

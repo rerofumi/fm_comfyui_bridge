@@ -210,6 +210,37 @@ def test_apply_overrides_falls_back_to_seed_input_name():
     assert "noise_seed" not in result["1"]["inputs"]
 
 
+def test_apply_overrides_updates_checkpoint_loader_model_name():
+    workflow = {
+        "1": {
+            "inputs": {"ckpt_name": "base.safetensors"},
+            "class_type": "CheckpointLoaderSimple",
+            "_meta": {"title": "Load Checkpoint"},
+        },
+    }
+    bindings = WorkflowBindingSet(meta_node_id="meta", model="Load Checkpoint")
+    loaded = _loaded(workflow, bindings)
+    result = apply_overrides(loaded, model="new-base.safetensors")
+    assert result["1"]["inputs"]["ckpt_name"] == "new-base.safetensors"
+
+
+def test_apply_overrides_updates_unet_loader_model_name():
+    workflow = {
+        "44": {
+            "inputs": {
+                "unet_name": "anima\\animaOfficial_preview3Base.safetensors",
+                "weight_dtype": "default",
+            },
+            "class_type": "UNETLoader",
+            "_meta": {"title": "Load Diffusion Model"},
+        },
+    }
+    bindings = WorkflowBindingSet(meta_node_id="meta", model="Load Diffusion Model")
+    loaded = _loaded(workflow, bindings)
+    result = apply_overrides(loaded, model="anima\\new.safetensors")
+    assert result["44"]["inputs"]["unet_name"] == "anima\\new.safetensors"
+
+
 def test_cli_generate_delegates_default_random_seed_to_client(monkeypatch):
     from fm_comfy_request import cli
 
@@ -228,6 +259,24 @@ def test_cli_generate_delegates_default_random_seed_to_client(monkeypatch):
 
     assert cli.main(["generate", "workflow.json"]) == 0
     assert captured == {"workflow": "workflow.json", "seed": None, "random_seed": True}
+
+
+def test_cli_generate_passes_model_override(monkeypatch):
+    from fm_comfy_request import cli
+
+    captured = {}
+
+    class Result:
+        images = []
+
+    def fake_generate(_workflow, **kwargs):
+        captured["model"] = kwargs.get("model")
+        return Result()
+
+    monkeypatch.setattr(cli, "generate", fake_generate)
+
+    assert cli.main(["generate", "workflow.json", "--model", "base.safetensors"]) == 0
+    assert captured == {"model": "base.safetensors"}
 
 
 def test_cli_generate_can_preserve_workflow_seed(monkeypatch):
@@ -415,3 +464,99 @@ def test_client_can_preserve_workflow_seed(tmp_path, monkeypatch):
 
     assert submitted["seed"] == 1
     assert result.workflow_final["2"]["inputs"]["noise_seed"] == 1
+
+
+def test_client_applies_config_model_to_checkpoint_loader(tmp_path, monkeypatch):
+    from fm_comfy_request import client
+
+    workflow_path = tmp_path / "workflow.json"
+    workflow_path.write_text(
+        json.dumps(
+            {
+                "1": {
+                    "inputs": {"ckpt_name": "base.safetensors"},
+                    "class_type": "CheckpointLoaderSimple",
+                    "_meta": {"title": "model"},
+                },
+                "36": {
+                    "inputs": {"value": "model: model"},
+                    "class_type": "PrimitiveStringMultiline",
+                    "_meta": {"title": "fm_comfy_request"},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    submitted = {}
+
+    class FakeTransport:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def submit_prompt(self, workflow, _client_id):
+            submitted["ckpt_name"] = workflow["1"]["inputs"]["ckpt_name"]
+            return "prompt-1"
+
+        def watch(self, *_args, **_kwargs):
+            return None
+
+        def history(self, _prompt_id):
+            return {"prompt-1": {"outputs": {}}}
+
+    monkeypatch.setattr(client, "Transport", FakeTransport)
+    lora = ConfigLoraYaml(data={"checkpoint": "new-base.safetensors"})
+
+    result = client.ComfyRequestClient(workflow_dir=tmp_path).generate(
+        "workflow.json", lora=lora
+    )
+
+    assert submitted["ckpt_name"] == "new-base.safetensors"
+    assert result.workflow_final["1"]["inputs"]["ckpt_name"] == "new-base.safetensors"
+
+
+def test_client_applies_config_model_to_unet_loader(tmp_path, monkeypatch):
+    from fm_comfy_request import client
+
+    workflow_path = tmp_path / "workflow.json"
+    workflow_path.write_text(
+        json.dumps(
+            {
+                "44": {
+                    "inputs": {"unet_name": "anima\\old.safetensors"},
+                    "class_type": "UNETLoader",
+                    "_meta": {"title": "Load Diffusion Model"},
+                },
+                "54": {
+                    "inputs": {"value": 'model: "Load Diffusion Model"'},
+                    "class_type": "PrimitiveStringMultiline",
+                    "_meta": {"title": "fm_comfy_request"},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    submitted = {}
+
+    class FakeTransport:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def submit_prompt(self, workflow, _client_id):
+            submitted["unet_name"] = workflow["44"]["inputs"]["unet_name"]
+            return "prompt-1"
+
+        def watch(self, *_args, **_kwargs):
+            return None
+
+        def history(self, _prompt_id):
+            return {"prompt-1": {"outputs": {}}}
+
+    monkeypatch.setattr(client, "Transport", FakeTransport)
+    lora = ConfigLoraYaml(data={"model": "anima\\new.safetensors"})
+
+    result = client.ComfyRequestClient(workflow_dir=tmp_path).generate(
+        "workflow.json", lora=lora
+    )
+
+    assert submitted["unet_name"] == "anima\\new.safetensors"
+    assert result.workflow_final["44"]["inputs"]["unet_name"] == "anima\\new.safetensors"

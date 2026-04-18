@@ -216,8 +216,18 @@ def _replace_links(
     return value
 
 
+def _model_input_name(node: dict[str, Any]) -> str | None:
+    class_type = node.get("class_type")
+    if class_type == "CheckpointLoaderSimple":
+        return "ckpt_name"
+    if class_type == "UNETLoader":
+        return "unet_name"
+    return None
+
+
 def apply_overrides(
     loaded: LoadedWorkflow,
+    model: str | None = None,
     prompt: str | None = None,
     negative: str | None = None,
     seed: int | None = None,
@@ -229,6 +239,16 @@ def apply_overrides(
 ) -> dict[str, Any]:
     workflow = copy.deepcopy(loaded.raw_workflow)
     b = loaded.bindings
+    if model is not None:
+        node = workflow[
+            resolve_node_reference(workflow, loaded.node_index_by_title, b.model)
+        ]
+        input_name = _model_input_name(node)
+        if input_name is None:
+            raise WorkflowValidationError(
+                f"model input not found for {b.model}: {node.get('class_type')}"
+            )
+        node.setdefault("inputs", {})[input_name] = model
     if prompt is not None and b.prompt:
         workflow[
             resolve_node_reference(workflow, loaded.node_index_by_title, b.prompt)
