@@ -1,6 +1,6 @@
 [project]
 name = "fm-comfyui-bridge"
-version = "0.10.0"
+version = "0.10.1"
 description = "ComfyUI access bridge"
 readme = "README.md"
 authors = [
@@ -28,6 +28,9 @@ Homepage = "https://github.com/rerofumi/fm_comfyui_bridge"
 
 [project.scripts]
 fm-comfy-request = "fm_comfy_request.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fm_comfyui_bridge", "src/fm_comfy_request"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [
