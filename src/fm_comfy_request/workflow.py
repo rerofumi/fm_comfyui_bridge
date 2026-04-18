@@ -31,7 +31,9 @@ def default_workflow_dir() -> Path:
     return Path.home() / ".config" / "fm_comfy_request" / "workflow"
 
 
-def resolve_workflow_path(workflow: str | Path, workflow_dir: Path | None = None) -> Path:
+def resolve_workflow_path(
+    workflow: str | Path, workflow_dir: Path | None = None
+) -> Path:
     path = Path(workflow)
     if path.is_absolute():
         if path.exists():
@@ -64,7 +66,9 @@ def list_workflows(workflow_dir: Path | None = None) -> list[Path]:
     workflow_dir = workflow_dir or default_workflow_dir()
     if not workflow_dir.exists():
         return []
-    return sorted(p for p in workflow_dir.iterdir() if p.is_file() and p.suffix == ".json")
+    return sorted(
+        p for p in workflow_dir.iterdir() if p.is_file() and p.suffix == ".json"
+    )
 
 
 def _meta_title(node: dict[str, Any]) -> str | None:
@@ -76,7 +80,11 @@ def _meta_title(node: dict[str, Any]) -> str | None:
 
 
 def find_meta_node(workflow: dict[str, Any]) -> tuple[str, dict[str, Any]]:
-    matches = [(node_id, node) for node_id, node in workflow.items() if _meta_title(node) == "fm_comfy_request"]
+    matches = [
+        (node_id, node)
+        for node_id, node in workflow.items()
+        if _meta_title(node) == "fm_comfy_request"
+    ]
     if not matches:
         raise WorkflowMetaNotFoundError("fm_comfy_request meta node not found")
     if len(matches) > 1:
@@ -120,21 +128,31 @@ def build_bindings(parsed: dict[str, Any]) -> WorkflowBindingSet:
         model=str(model),
         clip=str(parsed["clip"]) if parsed.get("clip") is not None else None,
         prompt=str(parsed["prompt"]) if parsed.get("prompt") is not None else None,
-        negative_prompt=str(parsed["negative-prompt"]) if parsed.get("negative-prompt") is not None else None,
+        negative_prompt=str(parsed["negative-prompt"])
+        if parsed.get("negative-prompt") is not None
+        else None,
         seed=str(parsed["seed"]) if parsed.get("seed") is not None else None,
         output=str(parsed["output"]) if parsed.get("output") is not None else None,
         input=str(parsed["input"]) if parsed.get("input") is not None else None,
         size=str(parsed["size"]) if parsed.get("size") is not None else None,
-        size_width=str(parsed["size-width"]) if parsed.get("size-width") is not None else None,
-        size_height=str(parsed["size-height"]) if parsed.get("size-height") is not None else None,
-        sampling_mode=str(parsed["sampling-mode"]) if parsed.get("sampling-mode") is not None else None,
+        size_width=str(parsed["size-width"])
+        if parsed.get("size-width") is not None
+        else None,
+        size_height=str(parsed["size-height"])
+        if parsed.get("size-height") is not None
+        else None,
+        sampling_mode=str(parsed["sampling-mode"])
+        if parsed.get("sampling-mode") is not None
+        else None,
         steps=str(parsed["steps"]) if parsed.get("steps") is not None else None,
         cfg=str(parsed["cfg"]) if parsed.get("cfg") is not None else None,
         seed_name=str(parsed.get("seed-name", "noise_seed")),
     )
 
 
-def build_indices(workflow: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], dict[str, list[str]]]:
+def build_indices(
+    workflow: dict[str, Any],
+) -> tuple[dict[str, dict[str, Any]], dict[str, list[str]]]:
     by_id = {node_id: node for node_id, node in workflow.items()}
     by_title: dict[str, list[str]] = {}
     for node_id, node in workflow.items():
@@ -144,7 +162,9 @@ def build_indices(workflow: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], 
     return by_id, by_title
 
 
-def resolve_node_reference(workflow: dict[str, Any], node_index_by_title: dict[str, list[str]], ref: str) -> str:
+def resolve_node_reference(
+    workflow: dict[str, Any], node_index_by_title: dict[str, list[str]], ref: str
+) -> str:
     if ref in workflow:
         return ref
     matches = node_index_by_title.get(ref, [])
@@ -167,13 +187,32 @@ def _output_slot(node: dict[str, Any], kind: str) -> int | None:
     return None
 
 
-def _replace_links(value: Any, old_id: str, new_id: str) -> Any:
-    if isinstance(value, list) and len(value) == 2 and value[0] == old_id and isinstance(value[1], int):
-        return [new_id, value[1]]
+def _replace_links(
+    value: Any,
+    old_id: str,
+    new_id: str,
+    old_slot: int | None = None,
+    new_slot: int | None = None,
+) -> Any:
+    if (
+        isinstance(value, list)
+        and len(value) == 2
+        and value[0] == old_id
+        and isinstance(value[1], int)
+    ):
+        if old_slot is not None and value[1] != old_slot:
+            return value
+        slot = new_slot if new_slot is not None else value[1]
+        return [new_id, slot]
     if isinstance(value, list):
-        return [_replace_links(item, old_id, new_id) for item in value]
+        return [
+            _replace_links(item, old_id, new_id, old_slot, new_slot) for item in value
+        ]
     if isinstance(value, dict):
-        return {key: _replace_links(item, old_id, new_id) for key, item in value.items()}
+        return {
+            key: _replace_links(item, old_id, new_id, old_slot, new_slot)
+            for key, item in value.items()
+        }
     return value
 
 
@@ -191,48 +230,78 @@ def apply_overrides(
     workflow = copy.deepcopy(loaded.raw_workflow)
     b = loaded.bindings
     if prompt is not None and b.prompt:
-        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.prompt)]["inputs"]["text"] = prompt
+        workflow[
+            resolve_node_reference(workflow, loaded.node_index_by_title, b.prompt)
+        ]["inputs"]["text"] = prompt
     if negative is not None and b.negative_prompt:
-        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.negative_prompt)]["inputs"]["text"] = negative
+        workflow[
+            resolve_node_reference(
+                workflow, loaded.node_index_by_title, b.negative_prompt
+            )
+        ]["inputs"]["text"] = negative
     if seed is not None and b.seed:
-        node = workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.seed)]
+        node = workflow[
+            resolve_node_reference(workflow, loaded.node_index_by_title, b.seed)
+        ]
         inputs = node.setdefault("inputs", {})
         seed_name = b.seed_name
         if seed_name not in inputs and seed_name == "noise_seed" and "seed" in inputs:
             seed_name = "seed"
         inputs[seed_name] = seed
     if width is not None and b.size_width:
-        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.size_width)]["inputs"]["value"] = width
+        workflow[
+            resolve_node_reference(workflow, loaded.node_index_by_title, b.size_width)
+        ]["inputs"]["value"] = width
     if height is not None and b.size_height:
-        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.size_height)]["inputs"]["value"] = height
+        workflow[
+            resolve_node_reference(workflow, loaded.node_index_by_title, b.size_height)
+        ]["inputs"]["value"] = height
     if width is not None and height is not None and b.size:
-        node = workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.size)]
+        node = workflow[
+            resolve_node_reference(workflow, loaded.node_index_by_title, b.size)
+        ]
         node.setdefault("inputs", {})["width"] = width
         node.setdefault("inputs", {})["height"] = height
     if steps is not None and b.steps:
-        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.steps)]["inputs"]["steps"] = steps
+        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.steps)][
+            "inputs"
+        ]["steps"] = steps
     if cfg is not None and b.cfg:
-        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.cfg)]["inputs"]["cfg"] = cfg
+        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.cfg)][
+            "inputs"
+        ]["cfg"] = cfg
     if sampling_mode is not None and b.sampling_mode:
-        workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.sampling_mode)]["inputs"]["sampling"] = sampling_mode
+        workflow[
+            resolve_node_reference(
+                workflow, loaded.node_index_by_title, b.sampling_mode
+            )
+        ]["inputs"]["sampling"] = sampling_mode
     return workflow
 
 
-def insert_loras(loaded: LoadedWorkflow, workflow: dict[str, Any], lora: ConfigLoraYaml | None) -> dict[str, Any]:
+def insert_loras(
+    loaded: LoadedWorkflow, workflow: dict[str, Any], lora: ConfigLoraYaml | None
+) -> dict[str, Any]:
     if lora is None or lora.lora_num == 0:
         return workflow
     bindings = loaded.bindings
-    model_id = resolve_node_reference(workflow, loaded.node_index_by_title, bindings.model)
+    model_id = resolve_node_reference(
+        workflow, loaded.node_index_by_title, bindings.model
+    )
     model_node = workflow[model_id]
     current_model = [model_id, _output_slot(model_node, "model")]
     if current_model[1] is None:
         raise WorkflowValidationError(f"model output not found for {bindings.model}")
     current_clip = None
     if bindings.clip:
-        clip_id = resolve_node_reference(workflow, loaded.node_index_by_title, bindings.clip)
+        clip_id = resolve_node_reference(
+            workflow, loaded.node_index_by_title, bindings.clip
+        )
         clip_slot = _output_slot(workflow[clip_id], "clip")
         if clip_slot is None:
-            raise LoraClipOutputMissingError(f"clip output not found for {bindings.clip}")
+            raise LoraClipOutputMissingError(
+                f"clip output not found for {bindings.clip}"
+            )
         current_clip = [clip_id, clip_slot]
     else:
         clip_slot = _output_slot(model_node, "clip")
@@ -242,8 +311,13 @@ def insert_loras(loaded: LoadedWorkflow, workflow: dict[str, Any], lora: ConfigL
     for index in range(lora.lora_num):
         if not lora.lora_enabled_flag(index):
             continue
-        model_only = bool(getattr(lora, "lora_model_only", lambda _i=index: False)(index))
-        new_id = str(max([int(node_id) for node_id in workflow if str(node_id).isdigit()] + [0]) + 1)
+        model_only = bool(
+            getattr(lora, "lora_model_only", lambda _i=index: False)(index)
+        )
+        new_id = str(
+            max([int(node_id) for node_id in workflow if str(node_id).isdigit()] + [0])
+            + 1
+        )
         while new_id in workflow or new_id in used:
             new_id = str(int(new_id) + 1)
         used.add(new_id)
@@ -259,17 +333,33 @@ def insert_loras(loaded: LoadedWorkflow, workflow: dict[str, Any], lora: ConfigL
         }
         if not model_only:
             if current_clip is None:
-                raise LoraClipOutputMissingError("clip output is required for clip-attached lora")
+                raise LoraClipOutputMissingError(
+                    "clip output is required for clip-attached lora"
+                )
             node["inputs"]["clip"] = current_clip
         old_model_id = current_model[0]
+        old_model_slot = current_model[1]
         old_clip_id = current_clip[0] if current_clip is not None else None
+        old_clip_slot = current_clip[1] if current_clip is not None else None
         workflow[new_id] = node
         for other_id in list(workflow.keys()):
             if other_id == new_id:
                 continue
-            workflow[other_id] = _replace_links(workflow[other_id], old_model_id, new_id)
+            workflow[other_id] = _replace_links(
+                workflow[other_id],
+                old_model_id,
+                new_id,
+                old_slot=old_model_slot,
+                new_slot=0,
+            )
             if old_clip_id is not None:
-                workflow[other_id] = _replace_links(workflow[other_id], old_clip_id, new_id)
+                workflow[other_id] = _replace_links(
+                    workflow[other_id],
+                    old_clip_id,
+                    new_id,
+                    old_slot=old_clip_slot,
+                    new_slot=1,
+                )
         current_model = [new_id, 0]
         if not model_only:
             current_clip = [new_id, 1]
@@ -279,5 +369,10 @@ def insert_loras(loaded: LoadedWorkflow, workflow: dict[str, Any], lora: ConfigL
 def validate_i2i(loaded: LoadedWorkflow) -> None:
     if not loaded.bindings.input:
         raise I2IUnsupportedError("workflow does not declare input binding")
-    if loaded.bindings.input not in loaded.node_index_by_title and loaded.bindings.input not in loaded.raw_workflow:
-        raise WorkflowValidationError(f"input binding not found: {loaded.bindings.input}")
+    if (
+        loaded.bindings.input not in loaded.node_index_by_title
+        and loaded.bindings.input not in loaded.raw_workflow
+    ):
+        raise WorkflowValidationError(
+            f"input binding not found: {loaded.bindings.input}"
+        )
