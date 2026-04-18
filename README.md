@@ -200,27 +200,303 @@ models = api.list_models(folder="checkpoints")
 
 このプロジェクトはMITライセンスの下で提供されています。
 
-## New module: fm_comfy_request
+## 新モジュール: fm_comfy_request
 
-The new `fm_comfy_request` package loads workflow JSON from `~/.config/fm_comfy_request/workflow/` by default and reads a `fm_comfy_request` multiline text node inside the workflow as YAML bindings.
+`fm_comfy_request` は、任意の ComfyUI API workflow JSON を外部ファイルとして読み込み、workflow 内の `fm_comfy_request` meta ノードに書かれた YAML binding を使って生成リクエストを行う新しいインターフェースです。
+
+旧 `fm_comfyui_bridge.bridge` はパッケージ同梱 workflow と固定 node ID を前提にしています。`fm_comfy_request` は他アプリから workflow を差し替えて使うことを想定し、生成結果を PIL ではなく PNG bytes として返します。これにより ComfyUI が出力した PNG metadata を保持できます。
+
+### Workflow の配置
+
+デフォルトでは以下のディレクトリから workflow JSON を読み込みます。
+
+```text
+~/.config/fm_comfy_request/workflow/
+```
+
+Windows でも `Path.home() / ".config" / "fm_comfy_request" / "workflow"` として解決されます。配置先は環境変数または引数で変更できます。
+
+```powershell
+$env:FM_COMFY_REQUEST_WORKFLOW_DIR = "E:\path\to\workflow"
+$env:FM_COMFY_REQUEST_SERVER_URL = "http://127.0.0.1:8188/"
+```
+
+workflow 引数はファイル名、`.json` 省略名、または絶対パスを指定できます。
+
+### Workflow meta YAML
+
+workflow 内に `_meta.title` が `fm_comfy_request` の multiline text ノードを 1 つ置き、その本文に YAML を書きます。現在の実装では、各 binding は node ID または一意な `_meta.title` を文字列で指定します。
+
+```yaml
+model: "Load Checkpoint"
+clip: "Load Checkpoint"
+prompt: "Prompt"
+negative-prompt: "Negative"
+seed: "SamplerCustom"
+seed-name: "noise_seed"
+output: "Save Image"
+input: "Load Image"
+size: "Empty Latent Image"
+sampling-mode: "ModelSamplingDiscrete"
+steps: "BasicScheduler"
+cfg: "SamplerCustom"
+```
+
+`model` は必須です。`clip` は clip 付き LoRA を使う場合に必要です。ただし `CheckpointLoaderSimple` のように `model` node から clip 出力を導出できる場合は省略できます。
+
+`seed-name` を省略すると `noise_seed` を使います。対象 node に `noise_seed` がなく `seed` がある場合は `seed` にフォールバックします。
 
 ### CLI
 
-```bash
+基本形です。
+
+```powershell
 uv run fm-comfy-request workflow-list
-uv run fm-comfy-request workflow-inspect example.json
-uv run fm-comfy-request generate example.json --prompt "1girl"
-uv run fm-comfy-request generate example.json --prompt "1girl" --seed 12345
+uv run fm-comfy-request workflow-inspect SDXL_LoRA_Base.json
+uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl, green hair" --output check.png
 ```
 
-`generate` and `generate-i2i` randomize the bound seed by default when no seed is specified, including both Python API and CLI usage. Use `--seed <value>` for a fixed CLI seed, or `--no-random-seed` to keep the seed stored in the workflow.
+接続先や workflow ディレクトリを指定する場合は、サブコマンドより前にグローバルオプションを置きます。
 
-### YAML binding example
-
-```yaml
-model: "Checkpoint Loader"
-prompt: "Positive Prompt"
-negative-prompt: "Negative Prompt"
-output: "Save Image"
+```powershell
+uv run fm-comfy-request --server-url http://127.0.0.1:8188/ --workflow-dir C:\Users\me\.config\fm_comfy_request\workflow generate SDXL_LoRA_Base.json --prompt "1girl" --output out.png
 ```
 
+seed の扱いです。
+
+```powershell
+# seed 未指定: fm_comfy_request client が毎回ランダム seed を生成
+uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl"
+
+# 固定 seed
+uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl" --seed 12345
+
+# workflow JSON 内の seed をそのまま使う
+uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl" --no-random-seed
+```
+
+I2I 生成です。workflow 側に `input` binding が必要です。
+
+```powershell
+uv run fm-comfy-request generate-i2i I2I_Workflow.json input.png --prompt "1girl" --seed 12345
+```
+
+モデル一覧とメモリ解放です。
+
+```powershell
+uv run fm-comfy-request models checkpoints
+uv run fm-comfy-request models loras
+uv run fm-comfy-request free
+```
+
+`generate --json` は `GenerationResult` の内容を JSON 形式で表示します。`workflow_final` や `history` も含むため、確認用途では出力が大きくなる場合があります。
+
+現在の CLI では `--lora-yaml`, `--width`, `--height`, `--steps`, `--cfg`, `--timeout`, `--verbose` は未実装です。LoRA を使う場合は Python API から `ConfigLoraYaml` または `SdLoraYaml` を渡してください。
+
+### Python 関数 API
+
+他アプリから手軽に使う場合は、`fm_comfy_request` のトップレベル関数を import します。
+
+```python
+from pathlib import Path
+
+from fm_comfy_request import generate
+
+result = generate(
+    "SDXL_LoRA_Base.json",
+    prompt="1girl, green hair",
+    negative="low quality, worst quality",
+    server_url="http://127.0.0.1:8188/",
+)
+
+if result.images:
+    Path("check.png").write_bytes(result.images[0].image_bytes)
+```
+
+固定 seed を使う場合です。
+
+```python
+from fm_comfy_request import generate
+
+result = generate(
+    "SDXL_LoRA_Base.json",
+    prompt="1girl",
+    seed=12345,
+)
+```
+
+workflow 内の seed をそのまま使う場合です。
+
+```python
+from fm_comfy_request import generate
+
+result = generate(
+    "SDXL_LoRA_Base.json",
+    prompt="1girl",
+    random_seed=False,
+)
+```
+
+I2I 生成です。
+
+```python
+from fm_comfy_request import generate_i2i
+
+result = generate_i2i(
+    "I2I_Workflow.json",
+    "input.png",
+    prompt="1girl",
+)
+```
+
+非同期 API もあります。実装は同期 API を worker thread で実行します。
+
+```python
+import asyncio
+
+from fm_comfy_request import generate_async
+
+async def main():
+    result = await generate_async("SDXL_LoRA_Base.json", prompt="1girl")
+    return result
+
+result = asyncio.run(main())
+```
+
+### Client API
+
+同じ接続先や workflow ディレクトリを繰り返し使うアプリでは `ComfyRequestClient` を使います。
+
+```python
+from pathlib import Path
+
+from fm_comfy_request.client import ComfyRequestClient
+
+client = ComfyRequestClient(
+    server_url="http://127.0.0.1:8188/",
+    workflow_dir=Path.home() / ".config" / "fm_comfy_request" / "workflow",
+    timeout_seconds=120,
+)
+
+result = client.generate("SDXL_LoRA_Base.json", prompt="1girl")
+```
+
+利用できる主なメソッドです。
+
+- `generate(workflow, prompt=None, negative=None, lora=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
+- `generate_i2i(workflow, input_image, prompt=None, negative=None, lora=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
+- `inspect_workflow(workflow)`
+- `list_workflows()`
+- `list_models(folder, server_url=None)`
+- `free(server_url=None)`
+
+`seed=None` かつ `random_seed=True` で workflow に seed binding がある場合、client が `0` から `2**63 - 1` のランダム seed を生成して workflow に書き込みます。同じ prompt を連続実行しても ComfyUI のキャッシュで 0 秒完了しないようにするためです。
+
+### LoRA 設定
+
+`generate()` / `generate_i2i()` の `lora` には、既存の `SdLoraYaml` または新しい `ConfigLoraYaml` を渡せます。
+
+```python
+from fm_comfy_request import ConfigLoraYaml, generate
+
+lora = ConfigLoraYaml()
+lora.data = {
+    "lora": [
+        {
+            "enabled": True,
+            "model": "example.safetensors",
+            "strength": 0.8,
+            "model_only": False,
+        }
+    ]
+}
+
+result = generate("SDXL_LoRA_Base.json", prompt="1girl", lora=lora)
+```
+
+`model_only: true` の LoRA は `LoraLoaderModelOnly` として model のみに接続します。未指定または `false` の場合は `LoraLoader` として model と clip に接続します。
+
+### 戻り値
+
+`generate()` / `generate_i2i()` は `GenerationResult` を返します。
+
+主なフィールドです。
+
+- `prompt_id`: ComfyUI の prompt ID
+- `client_id`: WebSocket 接続で使った client ID
+- `workflow_path`: 読み込んだ workflow のパス
+- `workflow_final`: prompt、seed、LoRA などを反映した最終 workflow
+- `output_node_id`: 出力として参照した SaveImage node ID
+- `images`: `GeneratedImage` のリスト
+- `history`: ComfyUI の `/history/{prompt_id}` 応答
+
+`GeneratedImage` の主なフィールドです。
+
+- `filename`: ComfyUI 出力ファイル名
+- `subfolder`: ComfyUI 出力サブフォルダ
+- `type`: ComfyUI 出力 type
+- `image_bytes`: PNG bytes
+
+PIL に変換したい場合は `image_bytes_to_pil()` を使います。
+
+```python
+from fm_comfy_request import image_bytes_to_pil
+
+image = image_bytes_to_pil(result.images[0].image_bytes)
+```
+
+bytes のまま保存する場合は PNG metadata を保持できます。
+
+```python
+from pathlib import Path
+
+Path("output.png").write_bytes(result.images[0].image_bytes)
+```
+
+### 進捗コールバック
+
+`progress_callback` を渡すと、WebSocket から受け取ったイベントを `ProgressEvent` として受け取れます。
+
+```python
+from fm_comfy_request import generate
+
+
+def on_progress(event):
+    if event.event_type == "progress":
+        print(event.value, "/", event.max_value)
+
+
+result = generate(
+    "SDXL_LoRA_Base.json",
+    prompt="1girl",
+    progress_callback=on_progress,
+)
+```
+
+### 例外
+
+`fm_comfy_request` の例外は `FmComfyRequestError` を基底にしています。
+
+```python
+from fm_comfy_request import FmComfyRequestError, generate
+
+try:
+    result = generate("missing.json", prompt="1girl")
+except FmComfyRequestError as exc:
+    print(f"generation failed: {exc}")
+```
+
+代表的な例外です。
+
+- `WorkflowNotFoundError`
+- `WorkflowLoadError`
+- `WorkflowMetaNotFoundError`
+- `WorkflowMetaInvalidError`
+- `NodeReferenceNotFoundError`
+- `NodeReferenceAmbiguousError`
+- `I2IUnsupportedError`
+- `LoraClipOutputMissingError`
+- `ComfyConnectionError`
+- `ComfyRequestError`
+- `ComfyTimeoutError`
+- `ComfyExecutionError`
