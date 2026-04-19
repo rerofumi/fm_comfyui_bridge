@@ -240,6 +240,7 @@ size: "Empty Latent Image"
 sampling-mode: "ModelSamplingDiscrete"
 steps: "BasicScheduler"
 cfg: "SamplerCustom"
+denoise: "BasicScheduler"
 ```
 
 `model` は必須です。`clip` は clip 付き LoRA を使う場合に必要です。ただし `CheckpointLoaderSimple` のように `model` node から clip 出力を導出できる場合は省略できます。
@@ -275,10 +276,10 @@ uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl" --seed 123
 uv run fm-comfy-request generate SDXL_LoRA_Base.json --prompt "1girl" --no-random-seed
 ```
 
-I2I 生成です。workflow 側に `input` binding が必要です。
+I2I 生成です。workflow 側に `input` binding が必要です。`denoise` binding がある workflow では `--denoise` で元画像の保持量を調整できます。
 
 ```powershell
-uv run fm-comfy-request generate-i2i I2I_Workflow.json input.png --prompt "1girl" --seed 12345
+uv run fm-comfy-request generate-i2i I2I_Workflow.json input.png --prompt "1girl" --negative "worst quality, low quality" --seed 12345 --denoise 0.5 --output i2i.png
 ```
 
 モデル一覧とメモリ解放です。
@@ -292,6 +293,10 @@ uv run fm-comfy-request free
 `generate --json` は `GenerationResult` の内容を JSON 形式で表示します。`workflow_final` や `history` も含むため、確認用途では出力が大きくなる場合があります。
 
 `--model` は workflow meta YAML の `model` が指す loader ノードを書き換えます。対象 node の `class_type` は `CheckpointLoaderSimple` または `UNETLoader` である必要があり、それぞれ `ckpt_name` / `unet_name` にモデル名を書き込みます。
+
+`--denoise` は workflow meta YAML の `denoise` が指すノードの `inputs.denoise` を上書きします。I2I では値が小さいほど元画像を保持しやすくなります。
+
+`generate` / `generate-i2i` の `--output` は、生成結果の先頭画像を指定したファイルへ bytes のまま保存します。PNG meta は保持されます。`generate-i2i` は保存後も `GenerationResult` の JSON を標準出力へ表示します。
 
 現在の CLI では `--lora-yaml`, `--width`, `--height`, `--steps`, `--cfg`, `--timeout`, `--verbose` は未実装です。LoRA を使う場合は Python API から `ConfigLoraYaml` または `SdLoraYaml` を渡してください。
 
@@ -349,6 +354,7 @@ result = generate_i2i(
     "I2I_Workflow.json",
     "input.png",
     prompt="1girl",
+    denoise=0.45,
 )
 ```
 
@@ -386,8 +392,8 @@ result = client.generate("SDXL_LoRA_Base.json", prompt="1girl")
 
 利用できる主なメソッドです。
 
-- `generate(workflow, prompt=None, negative=None, lora=None, model=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
-- `generate_i2i(workflow, input_image, prompt=None, negative=None, lora=None, model=None, seed=None, random_seed=True, server_url=None, progress_callback=None)`
+- `generate(workflow, prompt=None, negative=None, lora=None, model=None, seed=None, random_seed=True, denoise=None, server_url=None, progress_callback=None)`
+- `generate_i2i(workflow, input_image, prompt=None, negative=None, lora=None, model=None, seed=None, random_seed=True, denoise=None, server_url=None, progress_callback=None)`
 - `inspect_workflow(workflow)`
 - `list_workflows()`
 - `list_models(folder, server_url=None)`

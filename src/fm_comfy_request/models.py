@@ -24,6 +24,7 @@ class GenerationOverrides:
     height: int | None = None
     steps: int | None = None
     cfg: float | None = None
+    denoise: float | None = None
     sampling_mode: str | None = None
     server_url: str | None = None
 
@@ -54,6 +55,7 @@ class WorkflowBindingSet:
     sampling_mode: str | None = None
     steps: str | None = None
     cfg: str | None = None
+    denoise: str | None = None
     seed_name: str = "noise_seed"
 
 

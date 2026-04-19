@@ -2,7 +2,12 @@ import json
 from pathlib import Path
 
 from fm_comfy_request.config_lora_yaml import ConfigLoraYaml
-from fm_comfy_request.models import LoadedWorkflow, WorkflowBindingSet
+from fm_comfy_request.models import (
+    GeneratedImage,
+    GenerationResult,
+    LoadedWorkflow,
+    WorkflowBindingSet,
+)
 from fm_comfy_request.workflow import (
     apply_overrides,
     build_bindings,
@@ -195,6 +200,22 @@ def test_apply_overrides_updates_bound_noise_seed():
     assert result["1"]["inputs"]["noise_seed"] == 42
 
 
+def test_apply_overrides_updates_bound_denoise():
+    workflow = {
+        "1": {
+            "inputs": {"denoise": 0.72},
+            "class_type": "BasicScheduler",
+            "_meta": {"title": "BasicScheduler"},
+        },
+    }
+    bindings = WorkflowBindingSet(
+        meta_node_id="meta", model="model", denoise="BasicScheduler"
+    )
+    loaded = _loaded(workflow, bindings)
+    result = apply_overrides(loaded, denoise=0.45)
+    assert result["1"]["inputs"]["denoise"] == 0.45
+
+
 def test_apply_overrides_falls_back_to_seed_input_name():
     workflow = {
         "1": {
@@ -277,6 +298,69 @@ def test_cli_generate_passes_model_override(monkeypatch):
 
     assert cli.main(["generate", "workflow.json", "--model", "base.safetensors"]) == 0
     assert captured == {"model": "base.safetensors"}
+
+
+def test_cli_generate_i2i_passes_denoise_override(monkeypatch):
+    from fm_comfy_request import cli
+
+    captured = {}
+
+    def fake_generate_i2i(_workflow, _input_image, **kwargs):
+        captured["denoise"] = kwargs.get("denoise")
+        return GenerationResult(
+            prompt_id="prompt-1",
+            client_id="client-1",
+            workflow_path=Path("workflow.json"),
+            workflow_final={},
+            output_node_id=None,
+        )
+
+    monkeypatch.setattr(cli, "generate_i2i", fake_generate_i2i)
+
+    assert (
+        cli.main(["generate-i2i", "workflow.json", "input.png", "--denoise", "0.45"])
+        == 0
+    )
+    assert captured == {"denoise": 0.45}
+
+
+def test_cli_generate_i2i_writes_output_file(tmp_path, monkeypatch):
+    from fm_comfy_request import cli
+
+    output = tmp_path / "out.png"
+
+    def fake_generate_i2i(_workflow, _input_image, **_kwargs):
+        return GenerationResult(
+            prompt_id="prompt-1",
+            client_id="client-1",
+            workflow_path=Path("workflow.json"),
+            workflow_final={},
+            output_node_id="9",
+            images=[
+                GeneratedImage(
+                    filename="out.png",
+                    subfolder="",
+                    type="output",
+                    image_bytes=b"png-bytes",
+                )
+            ],
+        )
+
+    monkeypatch.setattr(cli, "generate_i2i", fake_generate_i2i)
+
+    assert (
+        cli.main(
+            [
+                "generate-i2i",
+                "workflow.json",
+                "input.png",
+                "--output",
+                str(output),
+            ]
+        )
+        == 0
+    )
+    assert output.read_bytes() == b"png-bytes"
 
 
 def test_cli_generate_can_preserve_workflow_seed(monkeypatch):
@@ -560,3 +644,65 @@ def test_client_applies_config_model_to_unet_loader(tmp_path, monkeypatch):
 
     assert submitted["unet_name"] == "anima\\new.safetensors"
     assert result.workflow_final["44"]["inputs"]["unet_name"] == "anima\\new.safetensors"
+
+
+def test_client_applies_denoise_override(tmp_path, monkeypatch):
+    from fm_comfy_request import client
+
+    workflow_path = tmp_path / "workflow.json"
+    workflow_path.write_text(
+        json.dumps(
+            {
+                "1": {
+                    "inputs": {"ckpt_name": "base.safetensors"},
+                    "class_type": "CheckpointLoaderSimple",
+                    "_meta": {"title": "model"},
+                },
+                "2": {
+                    "inputs": {"denoise": 0.72},
+                    "class_type": "BasicScheduler",
+                    "_meta": {"title": "BasicScheduler"},
+                },
+                "3": {
+                    "inputs": {"image": "input.png"},
+                    "class_type": "LoadImage",
+                    "_meta": {"title": "Load Image"},
+                },
+                "36": {
+                    "inputs": {
+                        "value": "model: model\ninput: Load Image\ndenoise: BasicScheduler"
+                    },
+                    "class_type": "PrimitiveStringMultiline",
+                    "_meta": {"title": "fm_comfy_request"},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    submitted = {}
+
+    class FakeTransport:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def submit_prompt(self, workflow, _client_id):
+            submitted["denoise"] = workflow["2"]["inputs"]["denoise"]
+            return "prompt-1"
+
+        def upload_image(self, _name, _image_bytes):
+            return {"name": _name}
+
+        def watch(self, *_args, **_kwargs):
+            return None
+
+        def history(self, _prompt_id):
+            return {"prompt-1": {"outputs": {}}}
+
+    monkeypatch.setattr(client, "Transport", FakeTransport)
+
+    result = client.ComfyRequestClient(workflow_dir=tmp_path).generate_i2i(
+        "workflow.json", b"png", denoise=0.45
+    )
+
+    assert submitted["denoise"] == 0.45
+    assert result.workflow_final["2"]["inputs"]["denoise"] == 0.45

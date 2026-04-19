@@ -93,6 +93,7 @@ class ComfyRequestClient:
         lora: SdLoraYaml | ConfigLoraYaml | None = None,
         seed: int | None = None,
         random_seed: bool = True,
+        denoise: float | None = None,
         server_url: str | None = None,
         input_image: str | bytes | None = None,
         i2i: bool = False,
@@ -110,6 +111,7 @@ class ComfyRequestClient:
             prompt=prompt,
             negative=negative,
             seed=seed,
+            denoise=denoise,
         )
         final_workflow = insert_loras(loaded, final_workflow, lora_cfg)
         transport = Transport(server_url or self.settings.server_url, timeout=self.settings.timeout_seconds)
@@ -136,11 +138,11 @@ class ComfyRequestClient:
                 images.append(GeneratedImage(filename=image["filename"], subfolder=image["subfolder"], type=image.get("type", "output"), image_bytes=image_bytes))
         return GenerationResult(prompt_id=prompt_id, client_id=client_id, workflow_path=loaded.path, workflow_final=final_workflow, output_node_id=output_node_id, images=images, history=history)
 
-    def generate(self, workflow: str | Path, prompt: str | None = None, negative: str | None = None, lora: SdLoraYaml | ConfigLoraYaml | None = None, model: str | None = None, seed: int | None = None, random_seed: bool = True, server_url: str | None = None, progress_callback: Callable | None = None):
-        return self._run(workflow, model=model, prompt=prompt, negative=negative, lora=lora, seed=seed, random_seed=random_seed, server_url=server_url, progress_callback=progress_callback)
+    def generate(self, workflow: str | Path, prompt: str | None = None, negative: str | None = None, lora: SdLoraYaml | ConfigLoraYaml | None = None, model: str | None = None, seed: int | None = None, random_seed: bool = True, denoise: float | None = None, server_url: str | None = None, progress_callback: Callable | None = None):
+        return self._run(workflow, model=model, prompt=prompt, negative=negative, lora=lora, seed=seed, random_seed=random_seed, denoise=denoise, server_url=server_url, progress_callback=progress_callback)
 
-    def generate_i2i(self, workflow: str | Path, input_image: str | bytes, prompt: str | None = None, negative: str | None = None, lora: SdLoraYaml | ConfigLoraYaml | None = None, model: str | None = None, seed: int | None = None, random_seed: bool = True, server_url: str | None = None, progress_callback: Callable | None = None):
-        return self._run(workflow, model=model, prompt=prompt, negative=negative, lora=lora, seed=seed, random_seed=random_seed, server_url=server_url, input_image=input_image, i2i=True, progress_callback=progress_callback)
+    def generate_i2i(self, workflow: str | Path, input_image: str | bytes, prompt: str | None = None, negative: str | None = None, lora: SdLoraYaml | ConfigLoraYaml | None = None, model: str | None = None, seed: int | None = None, random_seed: bool = True, denoise: float | None = None, server_url: str | None = None, progress_callback: Callable | None = None):
+        return self._run(workflow, model=model, prompt=prompt, negative=negative, lora=lora, seed=seed, random_seed=random_seed, denoise=denoise, server_url=server_url, input_image=input_image, i2i=True, progress_callback=progress_callback)
 
 
 class AsyncComfyRequestClient(ComfyRequestClient):

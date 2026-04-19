@@ -146,6 +146,9 @@ def build_bindings(parsed: dict[str, Any]) -> WorkflowBindingSet:
         else None,
         steps=str(parsed["steps"]) if parsed.get("steps") is not None else None,
         cfg=str(parsed["cfg"]) if parsed.get("cfg") is not None else None,
+        denoise=str(parsed["denoise"])
+        if parsed.get("denoise") is not None
+        else None,
         seed_name=str(parsed.get("seed-name", "noise_seed")),
     )
 
@@ -235,6 +238,7 @@ def apply_overrides(
     height: int | None = None,
     steps: int | None = None,
     cfg: float | None = None,
+    denoise: float | None = None,
     sampling_mode: str | None = None,
 ) -> dict[str, Any]:
     workflow = copy.deepcopy(loaded.raw_workflow)
@@ -290,6 +294,10 @@ def apply_overrides(
         workflow[resolve_node_reference(workflow, loaded.node_index_by_title, b.cfg)][
             "inputs"
         ]["cfg"] = cfg
+    if denoise is not None and b.denoise:
+        workflow[
+            resolve_node_reference(workflow, loaded.node_index_by_title, b.denoise)
+        ]["inputs"]["denoise"] = denoise
     if sampling_mode is not None and b.sampling_mode:
         workflow[
             resolve_node_reference(

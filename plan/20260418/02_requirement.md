@@ -77,6 +77,7 @@
 - `sampling-mode`: eps/v_prediction 切替ノード名
 - `steps`: サンプリングステップ数を指定するノード名
 - `cfg`: CFG スケールを指定するノード名
+- `denoise`: denoise 値を指定するノード名（I2I で元画像をどの程度変化させるかを制御する。値が小さいほど元画像を保持しやすい）
 
 ### 5.3 LoRA 挿入指定
 - LoRA を挿入する workflow 側の接続点を YAML 上で明示できること。
@@ -107,8 +108,10 @@
   - 接続先 URL（省略時は `http://127.0.0.1:8188/`、または環境変数の値）
   - `seed`（省略時は seed binding があればランダム生成）
   - `random_seed`（省略時 `True`。`False` の場合は workflow 既存 seed を維持）
+  - `denoise`（省略時は workflow の既存値。I2I では元画像の保持量を調整するために指定可能）
   - I2I 用入力画像（パスまたはバイナリ、I2I 時のみ）
 - 画像サイズ、steps、cfg、sampling mode の上書き処理は内部関数に存在するが、現在の公開 API / CLI では引数として露出していない。
+- `denoise` は公開 API / CLI から指定でき、workflow meta YAML の `denoise` binding がある場合に対象ノードの `inputs.denoise` を上書きする。
 - workflow のみを指定して呼び出した場合でも何らかの画像生成が成功することを保証する。
 
 ### 6.3 戻り値
@@ -213,7 +216,8 @@
 - 画像生成（通常 / I2I）
   - workflow・prompt・negative・seed・接続先 URL 等を引数で指定可能
   - `--seed` 指定時は固定 seed、未指定時は client 側でランダム seed、`--no-random-seed` 指定時は workflow 既存 seed を使用する
-  - 通常生成では出力先ファイル名を `--output` で指定可能
+  - `--denoise` 指定時は workflow meta YAML の `denoise` binding を通じて denoise 値を上書きする
+  - 通常生成 / I2I 生成では出力先ファイル名を `--output` で指定可能。保存対象は生成結果の先頭画像とし、bytes のまま保存して PNG meta を保持する
   - 現在の CLI では lora yaml 指定、出力ディレクトリ指定、進捗の標準出力表示は未実装
 - モデル一覧取得（フォルダ指定）
 - メモリ解放
